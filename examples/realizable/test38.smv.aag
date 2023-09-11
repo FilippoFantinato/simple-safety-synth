@@ -1,0 +1,24 @@
+aag 16 4 2 1 10
+2
+4
+6
+8
+10 11
+12 33
+12
+14 3 5
+16 14 7
+18 16 9
+20 10 18
+22 20 1
+24 21 0
+26 23 25
+28 12 1
+30 13 27
+32 29 31
+i0 controllable_c1
+i1 controllable_c2
+i2 controllable_c3
+i3 controllable_c4
+l0 EBR_0_COUNTER_0
+l1 EBR_0_ERROR_0
