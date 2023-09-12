@@ -1,0 +1,5 @@
+[requires]
+argparse/2.9
+[generators]
+CMakeDeps
+CMakeToolchain

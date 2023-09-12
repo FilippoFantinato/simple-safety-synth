@@ -1,4 +1,4 @@
-#include "aiger-utils.h"
+#include "aiger.h"
 
 namespace Utils::Aiger
 {
@@ -9,6 +9,13 @@ namespace Utils::Aiger
         aiger_read_from_file(aig, input);
         fclose(input);
         return aig;
+    }
+
+    void write_aiger(aiger *aig, char const *filename)
+    {
+        FILE *output = fopen(filename, "w");
+        aiger_write_to_file(aig, aiger_ascii_mode, output);
+        fclose(output);
     }
 
     NegatedNormalized normalize(AigerLit lit)

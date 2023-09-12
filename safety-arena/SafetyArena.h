@@ -12,7 +12,7 @@
 #include "../cudd/include/cuddObj.hh"
 #include "../cudd/include/cudd.h"
 
-#include "../utils/aiger-utils.h"
+#include "../utils/aiger.h"
 
 class SafetyArena
 {

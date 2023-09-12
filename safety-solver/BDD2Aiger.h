@@ -8,7 +8,7 @@
 #include "../cudd/include/cuddObj.hh"
 #include "../cudd/include/cudd.h"
 #include "../aiger/aiger.h"
-#include "../utils/aiger-utils.h"
+#include "../utils/aiger.h"
 
 struct BDDHash
 {
