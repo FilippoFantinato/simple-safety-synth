@@ -14,8 +14,17 @@ CUDD_LIBS=$(CUDD_PATH)/obj/libobj.a \
 	  $(CUDD_PATH)/util/libutil.a \
 	  $(CUDD_PATH)/epd/libepd.a
 
-HEADERS=safety-arena/SafetyArena.h safety-solver/SafetySolver.h safety-arena/aiger-utils.h # safety-arena/BDD2Aiger.h
-SOURCES=main.cpp safety-arena/SafetyArena.cpp safety-arena/aiger-utils.cpp
+HEADERS=safety-arena/SafetyArena.h \
+	    safety-solver/SafetySolver.h \
+		safety-solver/BDD2Aiger.h \
+		utils/aiger-utils.h
+
+SOURCES=main.cpp \
+		safety-arena/SafetyArena.cpp \
+		safety-solver/SafetySolver.cpp \
+		safety-solver/BDD2Aiger.cpp \
+		utils/aiger-utils.cpp
+
 OBJECTS=$(SOURCES:.cpp=.o)
 
 $(EXEC): $(HEADERS) $(SOURCES) $(CUDD_HDRS) $(CUDD_LIBS) $(AIGER_LIBS)

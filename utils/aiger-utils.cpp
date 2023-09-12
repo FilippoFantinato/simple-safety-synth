@@ -1,6 +1,6 @@
 #include "aiger-utils.h"
 
-namespace AigerUtils
+namespace Utils::Aiger
 {
     aiger* open_aiger(char const *filename)
     {
@@ -33,7 +33,7 @@ namespace AigerUtils
         if(rhs == 1) return lhs;
         
         assert(lhs > 1 && rhs > 1);
-        unsigned lit = AigerUtils::next_var_index(aig);
+        unsigned lit = Utils::Aiger::next_var_index(aig);
         aiger_add_and(aig, lit, lhs, rhs);
         return lit;
     }
@@ -44,10 +44,12 @@ namespace AigerUtils
         switch (aiger_lit2tag(aig, normalized.second))
         {
         case 0: // Constant
-            return normalized.second;
+            return lit;
 
-        case 1: // Input
-            return normalized.first ? aiger_not(offset) : offset;
+        case 1: { // Input 
+            AigerLit translated_lit = atoi(aiger_is_input(aig, normalized.second)->name);
+            return normalized.first ? aiger_not(translated_lit) : translated_lit;
+        }
 
         case 3: // And
             return lit + offset;
@@ -60,52 +62,62 @@ namespace AigerUtils
     aiger* merge_arena_strategy(aiger* arena, aiger *strategy)
     {
         aiger *aig = aiger_init();
+        std::unordered_map<AigerLit, char*> lit2name;
 
         // inputs
         for(unsigned i = 0; i < arena->num_inputs; ++i)
         {
-            aiger_symbol *symb = arena->inputs + i;
-            if(!AigerUtils::is_controllable(symb->name))
-                aiger_add_input(aig, symb->lit, symb->name);
+            aiger_symbol *input = arena->inputs + i;
+            if(Utils::Aiger::is_controllable(input->name))
+            {
+                lit2name[input->lit] = input->name;
+            }
+            else
+            {
+                aiger_add_input(aig, input->lit, input->name);
+            }
         }
 
         // latches
         for(unsigned i = 0; i < arena->num_latches; ++i)
         {
-            aiger_symbol *symb = arena->latches + i;
-            aiger_add_latch(aig, symb->lit, symb->next, symb->name);
+            aiger_symbol *latch = arena->latches + i;
+            aiger_add_latch(aig, latch->lit, latch->next, latch->name);
         }
 
         // outputs
         for(unsigned i = 0; i < arena->num_outputs; ++i)
         {
-            aiger_symbol *symb = arena->outputs + i;
-            aiger_add_output(aig, symb->lit, symb->name);
+            aiger_symbol *output = arena->outputs + i;
+            aiger_add_output(aig, output->lit, output->name);
         }
 
         for(unsigned i = 0; i < arena->num_ands; ++i)
         {
-            aiger_and *symb = arena->ands + i;
-            aiger_add_and(aig, symb->lhs, symb->rhs0, symb->rhs1);
+            aiger_and *a = arena->ands + i;
+            aiger_add_and(aig, a->lhs, a->rhs0, a->rhs1);
         }
 
         unsigned offset = next_var_index(arena);
         
-        
         for(unsigned i = 0; i < strategy->num_ands; ++i)
         {
-            aiger_and *symb = strategy->ands + i;
-            unsigned lhs = translate_lit(strategy, offset, symb->lhs);
-            unsigned rhs0 = translate_lit(strategy, offset, symb->rhs0);    
-            unsigned rhs1 = translate_lit(strategy, offset, symb->rhs1);    
+            aiger_and *a  = strategy->ands + i;
+            unsigned lhs  = translate_lit(strategy, offset, a->lhs);
+            unsigned rhs0 = translate_lit(strategy, offset, a->rhs0);    
+            unsigned rhs1 = translate_lit(strategy, offset, a->rhs1);    
             aiger_add_and(aig, lhs, rhs0, rhs1);
         }
 
         for(unsigned i = 0; i < strategy->num_outputs; ++i)
         {
-            aiger_symbol *symb = strategy->outputs + i;
-            unsigned rhs0 = translate_lit(strategy, offset, symb->lit);    
-            aiger_add_and(aig, symb->lit, rhs0, 1);
+            aiger_symbol *output = strategy->outputs + i;
+            
+            unsigned rhs0       = translate_lit(strategy, offset, output->lit);
+            unsigned output_lit = atoi(output->name);
+
+            aiger_add_and(aig, output_lit, rhs0, 1);
+            aiger_add_output(aig, output_lit, lit2name.at(output_lit));
         }
 
         return aig;

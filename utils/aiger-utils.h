@@ -1,22 +1,23 @@
-#ifndef AIGER_UTILS_H
-#define AIGER_UTILS_H
+#ifndef UTILS_AIGER_H
+#define UTILS_AIGER_H
 
 #include <cstdio>
 #include <vector>
 #include <cassert>
 #include <iostream>
+#include <string>
+#include <unordered_map>
 
 #include "../aiger/aiger.h"
 #include "../cudd/include/cuddObj.hh"
 #include "../cudd/include/cudd.h"
 
 #define CONTROLLABLE_PREFIX "controllable_"
-#define CONTROLLABLE_PREFIX_LENGTH 13
 
 typedef unsigned AigerLit;
 typedef std::pair<bool, AigerLit> NegatedNormalized;
 
-namespace AigerUtils
+namespace Utils::Aiger
 {
     aiger* open_aiger(char const *filename);
 

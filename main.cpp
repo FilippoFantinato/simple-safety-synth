@@ -7,7 +7,7 @@
 
 int main(int argc, char const *argv[])
 {
-    aiger *aig_arena = AigerUtils::open_aiger(argv[1]);
+    aiger *aig_arena = Utils::Aiger::open_aiger(argv[1]);
     Cudd manager;
 
     SafetyArena arena(aig_arena, manager);
@@ -15,14 +15,15 @@ int main(int argc, char const *argv[])
 
     BDD winning_region = solver.solve();
 
-
     if(winning_region != manager.bddZero())
     {
         std::cout << "Realizable" << std::endl;
-        
+
         aiger *strategy = solver.synthesize(winning_region);
-        
-        aiger *combined = AigerUtils::merge_arena_strategy(aig_arena, strategy);
+
+        // aiger_write_to_file(strategy, aiger_ascii_mode, stdout);
+
+        aiger *combined = Utils::Aiger::merge_arena_strategy(aig_arena, strategy);
 
         aiger_write_to_file(combined, aiger_ascii_mode, stdout);
     }
