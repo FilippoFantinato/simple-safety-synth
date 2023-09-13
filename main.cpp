@@ -4,7 +4,8 @@
 #include "./cudd/include/cuddObj.hh"
 
 #include "./safety-arena/SafetyArena.h"
-#include "./safety-solver/SafetySolver.h"
+#include "./safety-solver/SimpleSafetySolver.h"
+#include "./safety-solver/BetterSafetySolver.h"
 
 int main(int argc, char const *argv[])
 {
@@ -35,9 +36,9 @@ int main(int argc, char const *argv[])
     Cudd manager;
 
     SafetyArena arena(aig_arena, manager);
-    SafetySolver solver(arena, manager);
+    SafetySolver *solver = new BetterSafetySolver(arena, manager);
 
-    BDD winning_region = solver.solve();
+    BDD winning_region = solver->solve();
 
     if(winning_region != manager.bddZero())
     {
@@ -45,7 +46,7 @@ int main(int argc, char const *argv[])
 
         if(args.get<bool>("--synthesize"))
         {
-            aiger *strategy = solver.synthesize(winning_region);
+            aiger *strategy = solver->synthesize(winning_region);
             aiger *combined = Utils::Aiger::merge_arena_strategy(aig_arena, strategy);
 
             if(auto output = args.present("--output"))

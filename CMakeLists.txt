@@ -29,6 +29,10 @@ add_executable(simple-safety-synth
     safety-solver/BDD2Aiger.cpp
     safety-solver/SafetySolver.h
     safety-solver/SafetySolver.cpp
+    safety-solver/SimpleSafetySolver.h
+    safety-solver/SimpleSafetySolver.cpp
+    safety-solver/BetterSafetySolver.h
+    safety-solver/BetterSafetySolver.cpp
     utils/aiger.h
     utils/aiger.cpp
 )
