@@ -18,8 +18,8 @@ private:
     const SafetyArena& _arena;
     const Cudd& _manager;
 
-    BDD exiscube;
-    BDD univcube;
+    BDD controllable_cube;
+    BDD uncontrollable_cube;
 
     BDD pre(const BDD& states);
     std::vector<BDD> get_strategies(const BDD& winning_region);

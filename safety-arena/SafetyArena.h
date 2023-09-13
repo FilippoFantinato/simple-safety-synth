@@ -20,17 +20,23 @@ private:
     unsigned _var_index = 0;
     const Cudd& _manager;
 
+    // Literals of controllable variables
+    std::vector<AigerLit> _controllables_names;
+    // Literals of uncontrollable variables
+    std::vector<AigerLit> _uncontrollables_names;
+    // Literals of latch variables
+    std::vector<AigerLit> _latches_names;
+
+    // BDD representing controllable variables
+    std::vector<BDD> _controllables;
+    // BDD representing uncontrollable variables
+    std::vector<BDD> _uncontrollables;
+    // BDD representing latch variables
+    std::vector<BDD> _latches;
+
     BDD _initial;
     BDD _safety_condition;
     std::vector<BDD> _compose;
-
-    std::vector<AigerLit> _controllables_names;
-    std::vector<AigerLit> _uncontrollables_names;
-    std::vector<AigerLit> _latches_names;
-
-    std::vector<BDD> _controllables;
-    std::vector<BDD> _uncontrollables;
-    std::vector<BDD> _latches;
     
     void add_input(aiger_symbol *input, std::unordered_map<AigerLit, BDD> *cache);
     void add_latch(aiger_symbol *latch, std::unordered_map<AigerLit, BDD> *cache);

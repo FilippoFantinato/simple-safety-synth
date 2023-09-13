@@ -6,23 +6,23 @@ SafetySolver::SafetySolver(const SafetyArena& arena, const Cudd& manager)
     const auto& controllables   = arena.controllables();
     const auto& uncontrollables = arena.uncontrollables();
 
-    exiscube = std::accumulate(controllables.begin(), controllables.end(), manager.bddOne(), [](const BDD& acc, const BDD& el){return acc&el;});
-    univcube = std::accumulate(uncontrollables.begin(), uncontrollables.end(), manager.bddOne(), [](const BDD& acc, const BDD& el){return acc&el;});
+    controllable_cube   = std::accumulate(controllables.begin(), controllables.end(), manager.bddOne(), [](const BDD& acc, const BDD& el){return acc&el;});
+    uncontrollable_cube = std::accumulate(uncontrollables.begin(), uncontrollables.end(), manager.bddOne(), [](const BDD& acc, const BDD& el){return acc&el;});
 }
 
 BDD SafetySolver::solve()
 {
-    BDD fixpoint = _manager.bddZero();
-    BDD safeStates = _manager.bddOne();
+    BDD fixpoint   = _manager.bddZero();
+    BDD safe_states = _manager.bddOne();
 
-    // unsigned round = 0;
-    while(fixpoint != safeStates)
+    unsigned round = 0;
+    while(fixpoint != safe_states)
     {
-        // std::cout << "Round: " << ++round << std::endl;
+        std::cout << "Round: " << ++round << std::endl;
 
-        fixpoint = safeStates;
-        safeStates &= pre(safeStates);
-        if(_arena.initial() > safeStates)
+        fixpoint = safe_states;
+        safe_states &= pre(safe_states);
+        if(_arena.initial() > safe_states)
         {
             return _manager.bddZero();
         }
@@ -30,6 +30,29 @@ BDD SafetySolver::solve()
 
     return fixpoint;
 }
+
+// BDD SafetySolver::solve()
+// {
+//     BDD fixpoint  = _manager.bddZero();
+//     BDD attractor = ~_arena.safety_condition();
+
+//     unsigned round = 0;
+//     while(fixpoint != attractor)
+//     {
+//         std::cout << "Round: " << ++round << std::endl;
+
+//         fixpoint = attractor;
+        
+//         BDD controlled_predecessor = 
+//             attractor.VectorCompose(_arena.compose())
+//             .UnivAbstract(controllable_cube)
+//             .ExistAbstract(uncontrollable_cube);
+        
+//         attractor = attractor | controlled_predecessor;
+//     }
+
+//     return ~attractor;
+// }
 
 aiger* SafetySolver::synthesize(const BDD& winning_region)
 {
@@ -63,8 +86,11 @@ aiger* SafetySolver::synthesize(const BDD& winning_region)
 BDD SafetySolver::pre(const BDD& states)
 {
     return states.VectorCompose(_arena.compose())
-            .AndAbstract(_arena.safety_condition(), exiscube)
-            .UnivAbstract(univcube);
+            .AndAbstract(_arena.safety_condition(), controllable_cube)
+            .UnivAbstract(uncontrollable_cube);
+    // return (states.VectorCompose(_arena.compose()) & _arena.safety_condition())
+    //         .UnivAbstract(uncontrollable_cube)
+    //         .ExistAbstract(controllable_cube);
 }
 
 std::vector<BDD> SafetySolver::get_strategies(const BDD& winning_region)
