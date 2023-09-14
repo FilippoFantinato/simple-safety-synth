@@ -11,13 +11,6 @@ namespace Utils::Aiger
         return aig;
     }
 
-    void write_aiger(aiger *aig, char const *filename)
-    {
-        FILE *output = fopen(filename, "w");
-        aiger_write_to_file(aig, aiger_ascii_mode, output);
-        fclose(output);
-    }
-
     NegatedNormalized normalize(AigerLit lit)
     {
         return {lit & 1, lit & ~1};
@@ -66,7 +59,7 @@ namespace Utils::Aiger
         }
     }
 
-    aiger* merge_arena_strategy(aiger* arena, aiger *strategy)
+    aiger* merge_arena_strategy(aiger *arena, aiger *strategy)
     {
         aiger *aig = aiger_init();
         std::unordered_map<AigerLit, char*> lit2name;
@@ -96,7 +89,7 @@ namespace Utils::Aiger
         for(unsigned i = 0; i < arena->num_outputs; ++i)
         {
             aiger_symbol *output = arena->outputs + i;
-            aiger_add_output(aig, output->lit, output->name);
+            aiger_add_output(aig, output->lit, OUTPUT_FORMULA);
         }
 
         for(unsigned i = 0; i < arena->num_ands; ++i)
@@ -128,5 +121,87 @@ namespace Utils::Aiger
         }
 
         return aig;
+    }
+
+    std::string print_literal(aiger *aig, AigerLit lit)
+    {
+        if(lit == 0) return "FALSE";
+        if(lit == 1) return "TRUE";
+        if(lit & 1)  return "!" + print_literal(aig, lit & ~1);
+        if(auto name = aiger_get_symbol(aig, lit)) return name;
+
+        std::string prefix;
+        if(aiger_is_input(aig, lit))
+            prefix = "i";
+        else if(aiger_is_latch(aig, lit))
+            prefix = "l";
+        else if(aiger_is_and(aig, lit))
+            prefix = "a";
+        else 
+            prefix = "o";
+
+        return prefix + std::to_string(lit);
+    }
+
+    void write_aiger_to_smv(std::ostream& outfile, aiger *aig)
+    {
+        std::stringstream inputs;
+        for(unsigned i = 0; i < aig->num_inputs; ++i)
+        {
+            aiger_symbol *input = aig->inputs + i;
+            inputs << input->name;
+            if((i+1) != (aig->num_inputs))
+            {
+                inputs << ",";
+            }
+        }
+        outfile << "MODULE controller" << "(" << inputs.str() << ")" << std::endl;
+        
+        outfile << "--latches" << std::endl;
+        outfile << "VAR" << std::endl;
+        for(unsigned i = 0; i < aig->num_latches; ++i)
+        {
+            aiger_symbol *latch = aig->latches + i;
+            outfile << print_literal(aig, latch->lit) << " : boolean;" << std::endl;
+        }
+
+        outfile << "ASSIGN" << std::endl;
+        for(unsigned i = 0; i < aig->num_latches; ++i)
+        {
+            aiger_symbol *latch = aig->latches + i;
+
+            if(latch->reset != latch->lit)
+            {
+                outfile << "init(" << print_literal(aig, latch->lit) << ") := " 
+                        << print_literal(aig, latch->lit) << ";" << std::endl;
+            }
+
+            outfile << "next(" << print_literal(aig, latch->lit) << ") := "
+                    << print_literal(aig, latch->next) << ";" << std::endl;
+        }
+
+        outfile << "DEFINE" << std::endl;
+
+        outfile << "--ands" << std::endl;
+        for(unsigned i = 0; i < aig->num_ands; ++i)
+        {
+            aiger_and *a = aig->ands + i;
+
+            outfile << print_literal(aig, a->lhs)  << " := " 
+                    << print_literal(aig, a->rhs0) << " & "
+                    << print_literal(aig, a->rhs1) << ";" 
+                    << std::endl;
+        }
+
+        outfile << "--outputs" << std::endl;
+        for(unsigned i = 0; i < aig->num_outputs; ++i)
+        {
+            aiger_symbol *output = aig->outputs + i;
+
+            std::string name = output->name;
+            if(is_controllable(name)) name.erase(0, CONTROLLABLE_PREFIX_LEN);
+
+            outfile << name << " := " << print_literal(aig, output->lit) << ";" << std::endl;
+        }
     }
 }

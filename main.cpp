@@ -14,12 +14,16 @@ int main(int argc, char const *argv[])
     args.add_argument("input")
            .help("Input file in either aag or aig format")
            .required();
-    args.add_argument("--synthesize")
+    args.add_argument("-s", "--synthesize")
            .help("Whether synthesizing the strategy or not")
            .default_value(false)
            .implicit_value(true);
+    args.add_argument("--smv")
+           .help("Output SMV format")
+           .default_value(false)
+           .implicit_value(true);
     args.add_argument("-o", "--output")
-           .help("Output file in aag format");
+           .help("Output file in either SMV or aag format");
 
     try
     {
@@ -49,14 +53,29 @@ int main(int argc, char const *argv[])
             aiger *strategy = solver->synthesize(winning_region);
             aiger *combined = Utils::Aiger::merge_arena_strategy(aig_arena, strategy);
 
-            if(auto output = args.present("--output"))
+            auto output = args.present("--output");
+
+            if(args.get<bool>("--smv"))
             {
-                Utils::Aiger::write_aiger(combined, output->c_str());
+                std::ostream *outfile;
+                if(output)
+                    outfile = new std::ofstream(*output);
+                else
+                    outfile = &std::cout;
+
+                Utils::Aiger::write_aiger_to_smv(*outfile, combined);
+
+                outfile->flush();
             }
             else
-            {
-                aiger_write_to_file(combined, aiger_ascii_mode, stdout);
+            {   
+                FILE *outfile = output ? fopen(output->c_str(), "w") : stdout;
+                aiger_write_to_file(combined, aiger_ascii_mode, outfile);
+                fclose(outfile);
             }
+
+            delete strategy;
+            delete combined;
         }
     }
     else
@@ -65,6 +84,7 @@ int main(int argc, char const *argv[])
     }
 
     delete aig_arena;
+    delete solver;
 
     return 0;
 }

@@ -28,6 +28,7 @@ private:
 
 public:
     BDD2Aiger(const Cudd& manager);
+    // ~BDD2Aiger();
 
     aiger* get_encoding();
 

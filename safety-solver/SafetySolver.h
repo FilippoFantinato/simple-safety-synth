@@ -21,6 +21,7 @@ protected:
 
 public:
     SafetySolver(const SafetyArena& arena, const Cudd& manager);
+    virtual ~SafetySolver() = default;
 
     virtual BDD solve() = 0;
     virtual aiger* synthesize(const BDD& winning_region) = 0;

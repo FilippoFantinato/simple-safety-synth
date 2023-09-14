@@ -7,6 +7,11 @@ BDD2Aiger::BDD2Aiger(const Cudd& manager) : _manager(manager)
     _bdd2lit[_manager.bddOne()]  = aiger_true;
 }
 
+// BDD2Aiger::~BDD2Aiger()
+// {
+//     delete _aig;
+// }
+
 aiger* BDD2Aiger::get_encoding()
 {
     return _aig;
