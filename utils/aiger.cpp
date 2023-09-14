@@ -11,10 +11,15 @@ namespace Utils::Aiger
         return aig;
     }
 
-    NegatedNormalized normalize(AigerLit lit)
+    AigerLit normalize(AigerLit lit)
     {
-        return {lit & 1, lit & ~1};
+        return lit & ~1;
     }
+
+    bool is_negated(AigerLit lit)
+    {
+        return lit & 1;
+    } 
 
     AigerLit next_var_index(aiger *aig)
     {
@@ -40,15 +45,16 @@ namespace Utils::Aiger
 
     unsigned translate_lit(aiger *aig, unsigned offset, unsigned lit)
     {
-        auto normalized = normalize(lit);
-        switch (aiger_lit2tag(aig, normalized.second))
+        bool negated = is_negated(lit);
+        AigerLit normalized = normalize(lit);
+        switch (aiger_lit2tag(aig, normalized))
         {
         case 0: // Constant
             return lit;
 
         case 1: { // Input 
-            AigerLit translated_lit = atoi(aiger_is_input(aig, normalized.second)->name);
-            return normalized.first ? aiger_not(translated_lit) : translated_lit;
+            AigerLit translated_lit = atoi(aiger_is_input(aig, normalized)->name);
+            return negated ? aiger_not(translated_lit) : translated_lit;
         }
 
         case 3: // And
@@ -127,7 +133,7 @@ namespace Utils::Aiger
     {
         if(lit == 0) return "FALSE";
         if(lit == 1) return "TRUE";
-        if(lit & 1)  return "!" + print_literal(aig, lit & ~1);
+        if(is_negated(lit))  return "!" + print_literal(aig, normalize(lit));
         if(auto name = aiger_get_symbol(aig, lit)) return name;
 
         std::string prefix;

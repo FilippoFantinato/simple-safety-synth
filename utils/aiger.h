@@ -25,7 +25,9 @@ namespace Utils::Aiger
 {
     aiger* open_aiger(char const *filename);
 
-    NegatedNormalized normalize(AigerLit lit);
+    bool is_negated(AigerLit lit);
+    AigerLit normalize(AigerLit lit);
+    
     AigerLit next_var_index(aiger *aig);
 
     bool is_controllable(const std::string& name);

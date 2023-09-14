@@ -105,20 +105,19 @@ void SafetyArena::add_and(aiger_and *symb,
 
     (*visited)[symb->lhs] = true;
 
-    auto rhs0 = Utils::Aiger::normalize(symb->rhs0);
-    if(cache->count(rhs0.second) == 0) add_and(lit2symb.at(rhs0.second), lit2symb, visited, cache);
+    AigerLit rhs0 = Utils::Aiger::normalize(symb->rhs0);
+    if(cache->count(rhs0) == 0) add_and(lit2symb.at(rhs0), lit2symb, visited, cache);
 
-    auto rhs1 = Utils::Aiger::normalize(symb->rhs1);
-    if(cache->count(rhs1.second) == 0) add_and(lit2symb.at(rhs1.second), lit2symb, visited, cache);
+    AigerLit rhs1 = Utils::Aiger::normalize(symb->rhs1);
+    if(cache->count(rhs1) == 0) add_and(lit2symb.at(rhs1), lit2symb, visited, cache);
 
-    (*cache)[symb->lhs] = lookup_literal(rhs0.first, rhs0.second, *cache) & lookup_literal(rhs1.first, rhs1.second, *cache);
+    (*cache)[symb->lhs] = lookup_literal(Utils::Aiger::is_negated(rhs0), rhs0, *cache) & 
+                          lookup_literal(Utils::Aiger::is_negated(rhs1), rhs1, *cache);
 }
 
-BDD SafetyArena::lookup_literal(AigerLit node, const std::unordered_map<AigerLit, BDD>& cache)
+BDD SafetyArena::lookup_literal(AigerLit lit, const std::unordered_map<AigerLit, BDD>& cache)
 {
-    auto negated_normalized = Utils::Aiger::normalize(node);
-
-    return lookup_literal(negated_normalized.first, negated_normalized.second, cache);
+    return lookup_literal(Utils::Aiger::is_negated(lit), Utils::Aiger::normalize(lit), cache);
 }
 
 BDD SafetyArena::lookup_literal(bool negated, AigerLit normalized, const std::unordered_map<AigerLit, BDD>& cache)
