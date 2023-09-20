@@ -111,8 +111,8 @@ void SafetyArena::add_and(aiger_and *symb,
     AigerLit rhs1 = Utils::Aiger::normalize(symb->rhs1);
     if(cache->count(rhs1) == 0) add_and(lit2symb.at(rhs1), lit2symb, visited, cache);
 
-    (*cache)[symb->lhs] = lookup_literal(Utils::Aiger::is_negated(rhs0), rhs0, *cache) & 
-                          lookup_literal(Utils::Aiger::is_negated(rhs1), rhs1, *cache);
+    (*cache)[symb->lhs] = lookup_literal(Utils::Aiger::is_negated(symb->rhs0), rhs0, *cache) & 
+                          lookup_literal(Utils::Aiger::is_negated(symb->rhs1), rhs1, *cache);
 }
 
 BDD SafetyArena::lookup_literal(AigerLit lit, const std::unordered_map<AigerLit, BDD>& cache)
