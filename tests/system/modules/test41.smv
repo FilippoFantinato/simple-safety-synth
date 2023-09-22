@@ -1,0 +1,11 @@
+MODULE main
+IVAR
+	c : boolean;
+	u1 : boolean;
+	u2 : boolean;
+LTLSPEC (G(u1) | G(u1 -> (c | (X c) | (X X c) | (X X X c) | (X X X X c) | (X X X X X c)))) & (G(u2) | G((u2 & (!u2 & (X !u2) & (X X !u2))) -> (!c & (X !c) & (X X !c))))
+
+--INPUT : u1,u2
+--OUTPUT : c
+--REALIZABLE
+

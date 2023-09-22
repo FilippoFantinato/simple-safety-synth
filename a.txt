@@ -1,0 +1,284 @@
+*** This is NuSMV 2.6.0 (compiled on Wed Oct 14 15:36:56 2015)
+*** Enabled addons are: compass
+*** For more information on NuSMV see <http://nusmv.fbk.eu>
+*** or email to <nusmv-users@list.fbk.eu>.
+*** Please report bugs to <Please report bugs to <nusmv-users@fbk.eu>>
+
+*** Copyright (c) 2010-2014, Fondazione Bruno Kessler
+
+*** This version of NuSMV is linked to the CUDD library version 2.4.1
+*** Copyright (c) 1995-2004, Regents of the University of Colorado
+
+*** This is NuSMV 2.6.0 (compiled on Wed Oct 14 15:36:56 2015)
+*** Enabled addons are: compass
+*** For more information on NuSMV see <http://nusmv.fbk.eu>
+*** or email to <nusmv-users@list.fbk.eu>.
+*** Please report bugs to <Please report bugs to <nusmv-users@fbk.eu>>
+
+*** Copyright (c) 2010-2014, Fondazione Bruno Kessler
+
+*** This version of NuSMV is linked to the CUDD library version 2.4.1
+*** Copyright (c) 1995-2004, Regents of the University of Colorado
+
+*** This version of NuSMV is linked to the MiniSat SAT solver. 
+*** See http://minisat.se/MiniSat.html
+*** Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
+*** Copyright (c) 2007-2010, Niklas Sorensson
+
+Usage:  NuSMV [-h | -help] [options]* [input_file]
+   -h | -help
+      prints out current message
+   -AG
+      enables AG only search
+   -bdd_soh heuristics
+      sets the static variable ordering heuristics to "heuristics"
+  *** This version of NuSMV is linked to the MiniSat SAT solver. 
+*** See http://minisat.se/MiniSat.html
+*** Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
+*** Copyright (c) 2007-2010, Niklas Sorensson
+
+Usage:  NuSMV [-h | -help] [options]* [input_file]
+   -h | -help
+      prints out current message
+   -AG
+      enables AG only search
+   -bdd_soh heuristics
+      sets the static variable ordering heuristics to "heuristics"
+   -bmc
+      enable -bmc
+      enables BMC instead os BMC instead of BDD model checkf BDD model checking
+   -bmc_lening
+   -bmc_length k
+      setsgth k
+      sets bmc_length vari bmc_length variable, used by BMCable, used by BMC
+      NOTE: Req
+      NOTE: Requires option "-bmc"
+uires option "-bmc"
+   -coi
+      enabl   -coi
+      enables cone of influenes cone of influence reduction
+   ce reduction
+   -cp cp_t
+      conjunctive partitioning with threshold of each partition set to "cp_t" (DEFAULT, 
+      with cp_t=1000). Use -thresh instead -cp cp_t
+      conjunctive partitioning with threshold of each partition set to "cp_t" (DEFAULT, 
+      with cp_t=1000). Use -thresh instead of this.
+ of this.
+      NOTE: Incompatible with optio     NOTE: Incompatible with options -iwls95 -monons -iwls95 -mono -thresh
+      -thresh
+      WARNING: optio WARNING: option "-cp" is deprecan "-cp" is deprecated
+   -cpp
+     ted
+   -cpp
+      runs preprocessor  runs preprocessor on SMV files beforon SMV files before any specified wite any specified with -pre. Environmenth -pre. Environment 
+      variable 'C 
+      variable 'CPP' can be used toPP' can be used to specify a different specify a different preprocessor.
+  preprocessor.
+      WARNING: optio     WARNING: option "-cpp" is deprecan "-cpp" is deprecated
+   -ctt
+      ted
+   -ctt
+      enables checking foenables checking for the totality of r the totality of the transition rethe transition relation
+   -dcx
+  lation
+   -dcx
+      disables co    disables computation of computation of counter-examples
+  unter-examples
+   -df
+      disable -df
+      disables the computation s the computation of reachable stateof reachable states
+      NOTE:s
+      NOTE: Incompatible wit Incompatible with option -f
+   -disah option -f
+   -disable_daggifier
+    ble_daggifier
+      disables the SMV m  disables the SMV model dumper dagodel dumper daggifier
+   -disablegifier
+   -disable_sexp2bdd_caching
+_sexp2bdd_caching
+      disables caching of exp      disables caching of expressionsevaluationressionsevaluation to BDD
+   -disable_syntact to BDD
+   -disable_syntactic_checks
+      Skips ic_checks
+      Skips some correctnesssome correctness checks over the checks over the input model. Warning: when  input model. Warning: when using this 
+      optionusing this 
+      option, the input model MUST be correct, ot, the input model MUST be correct, otherwise the toolherwise the tool may crash
+   - may crash
+   -dynamic
+      edynamic
+      enables dynamic nables dynamic reordering ofreordering of variables
+    variables
+   -f
+      compute-f
+      computes the reachables the reachable states (forward  states (forward search) (defaultsearch) (default)
+      NO)
+      NOTE: Incompatible TE: Incompatible with option -dfwith option -df
+      WARNING:
+      WARNING: option "-f" is  option "-f" is deprecated
+   -fltdeprecated
+   -flt
+      computes the
+      computes the reachable states reachable states also for the LTL also for the LTL Tableau
+   -i i Tableau
+   -i iv_file
+      reav_file
+      reads order of vards order of variables from file iables from file "iv_file"
+   -ic
+ "iv_file"
+   -ic
+      does not check     does not check COMPUTE
+   -ii
+  COMPUTE
+   -ii
+      does not check     does not check INVARSPEC
+   -ils
+ INVARSPEC
+   -ils
+      does not check      does not check LTLSPEC
+   -int
+  LTLSPEC
+   -int
+      enables interac     enables interactive mode
+   -ips
+tive mode
+   -ips
+      does not check      does not check PSLSPEC
+   -is
+  PSLSPEC
+   -is
+      does not check     does not check SPEC
+   -iwl95preor SPEC
+   -iwl95preorder
+      enables iwder
+      enables iwls95 preordering
+ ls95 preordering
+   -iwls95 cp_t
+        -iwls95 cp_t
+      enables Iwls95 conjenables Iwls95 conjunctive partitioning unctive partitioning and sets
+     and sets
+      NOTE: Incompatible NOTE: Incompatible with options -thres with options -thresh -mono -cp
+   -keeh -mono -cp
+   -keep_single_value_vars
+p_single_value_vars
+      Does not conv      Does not convert variables thatert variables that have only one single possible have only one single possible value into con value into constant 
+      DEFstant 
+      DEFINEs
+   -load INEs
+   -load sc_file
+      exsc_file
+      executes NuSMV comecutes NuSMV commands from file
+mands from file
+      NOTE:       NOTE: Incompatible witIncompatible with option -source
+h option -source
+      WARNING:       WARNING: option "-load" option "-load" is deprecated
+is deprecated
+   -lp
+      li   -lp
+      lists all propertists all properties in SMV modeles in SMV model
+   -m method
+
+   -m method
+      sets the v      sets the variable orderingariable ordering method to "method method to "method". Reordering wil". Reordering will be activated
+  l be activated
+   -mono
+      enabl -mono
+      enables monolithic tres monolithic transition relation
+ansition relation
+      NOTE: In      NOTE: Incompatible with opcompatible with options -thresh -iwltions -thresh -iwls95 -cp
+   -n idxs95 -cp
+   -n idx
+      specifies wh
+      specifies which property of Sich property of SMV model should be MV model should be checked
+   -noachecked
+   -noaffinity
+      disaffinity
+      disables affinity clbles affinity clustering
+   -oustering
+   -o ov_file
+      pr ov_file
+      prints order of varints order of variablesto file "oiablesto file "ov_file"
+   -obv_file"
+   -obm bn_file
+      pm bn_file
+      prints boolean modrints boolean model to file "bn_fiel to file "bn_file"
+   -ofm fn_fle"
+   -ofm fn_file
+      printsile
+      prints flattened model  flattened model to file "fn_fileto file "fn_file"
+   -ojeba "
+   -ojeba str
+      sets str
+      sets the algorthim usthe algorthim used for BDD-based led for BDD-based language emptiness anguage emptiness of Buchi fair trof Buchi fair transition 
+      ansition 
+      systems (defaultsystems (default is EL_bwd). The  is EL_bwd). The available algorthiavailable algorthims are: EL_fwd, Ems are: EL_fwd, EL_bwd
+   -old
+  L_bwd
+   -old
+      keeps backward    keeps backward compatibility wi compatibility with older versionsth older versions of NuSMV
+   -old of NuSMV
+   -old_div_op
+      en_div_op
+      enables the old seables the old semantics of "/" amantics of "/" and "mod" operationsnd "mod" operations instead of ANSI instead of ANSI C semantics
+   -pre pp_list
+      defines a space-separated list C semantics
+   -pre pp_list
+      defines a space-separated list of pre-processors to run (in the order given) 
+      on the of pre-processors to run (in the order given) 
+      on the input file. Th input file. The list must be in double e list must be in double quotes if there quotes if there is more than onis more than one pre-processore pre-processor 
+      named.
+  
+      named.
+      The availab     The available preprocessors le preprocessors are: cpp m4
+   -r
+      enables printing of reachable states
+   -reorder
+      enablesare: cpp m4
+   -r
+      enables printing of reachable states
+   -reorder
+      enables reordering of variables before exiting reordering of variables before exiting
+   -rin on|of
+   -rin on|off
+      enables (on) or disablf
+      enables (on) or disables rbc inlining (es rbc inlining (default is on)
+   -s
+      does not read adefault is on)
+   -s
+      does not read any initialization ny initialization file (/home/filippofafile (/home/filippofantinato/nusmv/master.nuntinato/nusmv/master.nusmvrc, 
+      ~/.nusmvrsmvrc, 
+      ~/.nusmvrc) (defc) (default in ault in batch mode)
+   -batch mode)
+   -sat_solver str
+ sat_solver str
+      sets the sat_sol     sets the sat_solver variable, used bver variable, used by BMC. The availably BMC. The available SAT solvers are: e SAT solvers are: MiniSat
+   -siMiniSat
+   -sin on|off
+      enn on|off
+      enables (on) or disableables (on) or disables sexp inlining (default is sexp inlining (default is off)
+   -source sc_file
+s off)
+   -source sc_file
+      executes NuSMV comma      executes NuSMV commands from file
+      NOnds from file
+      NOTE: Incompatible with TE: Incompatible with option -load
+   -t tv_file
+  option -load
+   -t tv_file
+      reads order of vars for clus    reads order of vars for clustering from file "tv_file"
+   tering from file "tv_file"
+   -thresh cp_t
+      conjunctive-thresh cp_t
+      conjunctive partitioning with threshold of  partitioning with threshold of each partition set to "cp_t" (DEFAeach partition set to "cp_t" (DEFAULT, 
+      with cp_t=1000)
+ULT, 
+      with cp_t=1000)
+      NOTE: Incompatible with options -iwls95 -mono -cp
+   -v v      NOTE: Incompatible with options -iwls95 -mono -cp
+   -v vl
+      sets verbose level to "vl"
+l
+      sets verbose level to "vl"
+   input-file
+      the file bot   input-file
+      the file both the model and the spec were rh the model and the spec were read from
+ead from

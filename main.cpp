@@ -7,10 +7,11 @@
 #include "./safety-solver/SimpleSafetySolver.h"
 #include "./safety-solver/BetterSafetySolver.h"
 
+using argparse::ArgumentParser;
+
 int main(int argc, char const *argv[])
 {
-    argparse::ArgumentParser args("simple-safety-synth");
-
+    ArgumentParser args("simple-safety-synth");
     args.add_argument("input")
            .help("Input file in either aag or aig format")
            .required();
@@ -20,8 +21,14 @@ int main(int argc, char const *argv[])
            .implicit_value(true);
     args.add_argument("--smv")
            .help("Output SMV format")
-           .default_value(false)
-           .implicit_value(true);
+           .action([](const std::string& value) -> unsigned {
+                const std::vector<std::string> c = {"sub", "main"};
+                auto it = std::find(c.begin(), c.end(), value);
+                if (it != c.end()) {
+                    return it - c.begin() + 1;
+                }
+                throw std::runtime_error("Error parsing argument --smv: value not in {sub, main}");
+           });
     args.add_argument("-o", "--output")
            .help("Output file in either SMV or aag format");
 
@@ -54,16 +61,15 @@ int main(int argc, char const *argv[])
             aiger *combined = Utils::Aiger::merge_arena_strategy(aig_arena, strategy);
 
             auto output = args.present("--output");
+            auto smv = args.present<unsigned>("--smv");
 
-            if(args.get<bool>("--smv"))
+            if(smv)
             {
-                std::ostream *outfile;
-                if(output)
-                    outfile = new std::ofstream(*output);
-                else
-                    outfile = &std::cout;
+                std::ostream *outfile = output ? 
+                                        new std::ofstream(*output) : 
+                                        &std::cout;
 
-                Utils::Aiger::write_aiger_to_smv(*outfile, combined);
+                Utils::Aiger::write_aiger_to_smv(*outfile, combined, *smv == 1);
 
                 outfile->flush();
             }

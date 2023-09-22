@@ -36,7 +36,7 @@ namespace Utils::Aiger
 
     aiger* merge_arena_strategy(aiger *arena, aiger *strategy);
 
-    void write_aiger_to_smv(std::ostream& outfile, aiger *aig);
+    void write_aiger_to_smv(std::ostream& outfile, aiger *aig, bool submodule);
 }
 
 #endif

@@ -1,0 +1,33 @@
+MODULE main
+--latches
+VAR
+u : boolean;
+EBR_0_ERROR_1 : boolean;
+EBR_0_COUNTER_0 : boolean;
+EBR_0_ERROR_0 : boolean;
+ASSIGN
+init(EBR_0_ERROR_1) := FALSE;
+next(EBR_0_ERROR_1) := !a14;
+init(EBR_0_COUNTER_0) := FALSE;
+next(EBR_0_COUNTER_0) := !EBR_0_COUNTER_0;
+init(EBR_0_ERROR_0) := FALSE;
+next(EBR_0_ERROR_0) := !a32;
+DEFINE
+--ands
+a8 := !EBR_0_ERROR_1 & u;
+a10 := a8 & FALSE;
+a12 := !a8 & TRUE;
+a14 := !a10 & !a12;
+a20 := !EBR_0_COUNTER_0 & a2;
+a22 := a20 & TRUE;
+a24 := !a20 & FALSE;
+a26 := !a22 & !a24;
+a28 := EBR_0_ERROR_0 & TRUE;
+a30 := !EBR_0_ERROR_0 & !a26;
+a32 := !a28 & !a30;
+a34 := EBR_0_ERROR_0 & EBR_0_ERROR_1;
+a2 := FALSE & TRUE;
+--outputs
+formula := !a34;
+c := a2;
+LTLSPEC G(formula)

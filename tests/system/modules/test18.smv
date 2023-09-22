@@ -1,0 +1,9 @@
+MODULE main
+IVAR
+	c : boolean;
+	u : boolean;
+LTLSPEC u V c
+
+--INPUT   : u
+--OUTPUT  : c
+--REALIZABLE

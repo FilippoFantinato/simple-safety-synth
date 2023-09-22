@@ -95,7 +95,7 @@ namespace Utils::Aiger
         for(unsigned i = 0; i < arena->num_outputs; ++i)
         {
             aiger_symbol *output = arena->outputs + i;
-            aiger_add_output(aig, output->lit, OUTPUT_FORMULA);
+            aiger_add_output(aig, aiger_not(output->lit), OUTPUT_FORMULA);
         }
 
         for(unsigned i = 0; i < arena->num_ands; ++i)
@@ -149,22 +149,38 @@ namespace Utils::Aiger
         return prefix + std::to_string(lit);
     }
 
-    void write_aiger_to_smv(std::ostream& outfile, aiger *aig)
+    void write_aiger_to_smv(std::ostream& outfile, aiger *aig, bool submodule)
     {
-        std::stringstream inputs;
-        for(unsigned i = 0; i < aig->num_inputs; ++i)
+        if(submodule)
         {
-            aiger_symbol *input = aig->inputs + i;
-            inputs << input->name;
-            if((i+1) != (aig->num_inputs))
+            std::stringstream inputs;
+            for(unsigned i = 0; i < aig->num_inputs; ++i)
             {
-                inputs << ",";
+                aiger_symbol *input = aig->inputs + i;
+                inputs << input->name;
+                if((i+1) != (aig->num_inputs))
+                {
+                    inputs << ",";
+                }
+            }
+            
+            outfile << "MODULE controller" << "(" << inputs.str() << ")" << std::endl;
+            outfile << "--latches" << std::endl;
+            outfile << "VAR" << std::endl;
+        }
+        else
+        {
+            outfile << "MODULE main" << std::endl;
+            outfile << "--latches" << std::endl;
+            outfile << "VAR" << std::endl;
+
+            for(unsigned i = 0; i < aig->num_inputs; ++i)
+            {
+                aiger_symbol *input = aig->inputs + i;
+                outfile << print_literal(aig, input->lit) << " : boolean;" << std::endl;
             }
         }
-        outfile << "MODULE controller" << "(" << inputs.str() << ")" << std::endl;
         
-        outfile << "--latches" << std::endl;
-        outfile << "VAR" << std::endl;
         for(unsigned i = 0; i < aig->num_latches; ++i)
         {
             aiger_symbol *latch = aig->latches + i;
@@ -179,7 +195,7 @@ namespace Utils::Aiger
             if(latch->reset != latch->lit)
             {
                 outfile << "init(" << print_literal(aig, latch->lit) << ") := " 
-                        << print_literal(aig, latch->lit) << ";" << std::endl;
+                        << print_literal(aig, latch->reset) << ";" << std::endl;
             }
 
             outfile << "next(" << print_literal(aig, latch->lit) << ") := "

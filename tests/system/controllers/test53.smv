@@ -1,0 +1,98 @@
+MODULE main
+--latches
+VAR
+p : boolean;
+EBR_0_SPECF_7 : boolean;
+EBR_0_SPECF_6 : boolean;
+EBR_0_ERROR_0 : boolean;
+EBR_0_SPECF_5 : boolean;
+EBR_0_SPECF_4 : boolean;
+EBR_0_SPECF_3 : boolean;
+EBR_0_SPECF_2 : boolean;
+EBR_0_COUNTER_2 : boolean;
+EBR_0_COUNTER_0 : boolean;
+EBR_0_PAST_8 : boolean;
+EBR_0_COUNTER_1 : boolean;
+ASSIGN
+init(EBR_0_SPECF_7) := FALSE;
+next(EBR_0_SPECF_7) := !a16;
+init(EBR_0_SPECF_6) := FALSE;
+next(EBR_0_SPECF_6) := a24;
+init(EBR_0_ERROR_0) := FALSE;
+next(EBR_0_ERROR_0) := !a66;
+init(EBR_0_SPECF_5) := FALSE;
+next(EBR_0_SPECF_5) := a72;
+init(EBR_0_SPECF_4) := FALSE;
+next(EBR_0_SPECF_4) := a80;
+init(EBR_0_SPECF_3) := FALSE;
+next(EBR_0_SPECF_3) := a88;
+init(EBR_0_SPECF_2) := FALSE;
+next(EBR_0_SPECF_2) := a34;
+init(EBR_0_COUNTER_2) := FALSE;
+next(EBR_0_COUNTER_2) := a100;
+init(EBR_0_COUNTER_0) := FALSE;
+next(EBR_0_COUNTER_0) := !EBR_0_COUNTER_0;
+init(EBR_0_PAST_8) := FALSE;
+next(EBR_0_PAST_8) := !a120;
+init(EBR_0_COUNTER_1) := FALSE;
+next(EBR_0_COUNTER_1) := a126;
+DEFINE
+--ands
+a14 := !EBR_0_COUNTER_1 & !EBR_0_COUNTER_0;
+a16 := !EBR_0_COUNTER_2 & a14;
+a20 := !EBR_0_COUNTER_1 & !EBR_0_COUNTER_0;
+a22 := !EBR_0_COUNTER_2 & a20;
+a24 := EBR_0_SPECF_7 & !a22;
+a32 := !EBR_0_ERROR_0 & EBR_0_PAST_8;
+a36 := a2 & a34;
+a38 := a36 & a4;
+a40 := !EBR_0_ERROR_0 & a38;
+a42 := !EBR_0_ERROR_0 & a4;
+a44 := a42 & FALSE;
+a46 := !a42 & TRUE;
+a48 := !a44 & !a46;
+a50 := a40 & FALSE;
+a52 := !a40 & !a48;
+a54 := !a50 & !a52;
+a56 := a32 & FALSE;
+a58 := !a32 & !a54;
+a60 := !a56 & !a58;
+a62 := !EBR_0_COUNTER_2 & FALSE;
+a64 := EBR_0_COUNTER_2 & !a60;
+a66 := !a62 & !a64;
+a68 := !EBR_0_COUNTER_1 & !EBR_0_COUNTER_0;
+a70 := !EBR_0_COUNTER_2 & a68;
+a72 := EBR_0_SPECF_6 & !a70;
+a76 := !EBR_0_COUNTER_1 & !EBR_0_COUNTER_0;
+a78 := !EBR_0_COUNTER_2 & a76;
+a80 := p & !a78;
+a84 := !EBR_0_COUNTER_1 & !EBR_0_COUNTER_0;
+a86 := !EBR_0_COUNTER_2 & a84;
+a88 := EBR_0_SPECF_4 & !a86;
+a94 := EBR_0_COUNTER_1 & EBR_0_COUNTER_0;
+a96 := a94 & EBR_0_COUNTER_2;
+a98 := !EBR_0_COUNTER_2 & !a94;
+a100 := !a96 & !a98;
+a102 := a2 & a34;
+a104 := EBR_0_PAST_8 & TRUE;
+a106 := !EBR_0_PAST_8 & FALSE;
+a108 := !a104 & !a106;
+a110 := a102 & TRUE;
+a112 := !a102 & !a108;
+a114 := !a110 & !a112;
+a116 := !EBR_0_COUNTER_2 & FALSE;
+a118 := EBR_0_COUNTER_2 & !a114;
+a120 := !a116 & !a118;
+a122 := EBR_0_COUNTER_0 & EBR_0_COUNTER_1;
+a124 := !EBR_0_COUNTER_1 & !EBR_0_COUNTER_0;
+a126 := !a122 & !a124;
+a128 := EBR_0_SPECF_3 & EBR_0_SPECF_5;
+a130 := !a128 & !EBR_0_SPECF_2;
+a34 := !a130 & TRUE;
+a2 := FALSE & TRUE;
+a4 := TRUE & TRUE;
+--outputs
+formula := !EBR_0_ERROR_0;
+q := a2;
+s := a4;
+LTLSPEC G(formula)

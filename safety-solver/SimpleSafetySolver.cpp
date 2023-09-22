@@ -17,15 +17,20 @@ BDD SimpleSafetySolver::solve()
 
         fixpoint = attractor;
         
-        BDD controlled_predecessor = 
-            attractor.VectorCompose(_arena.compose())
-            .UnivAbstract(_controllable_cube)
-            .ExistAbstract(_uncontrollable_cube);
+        BDD controlled_predecessor = attractor.VectorCompose(_arena.compose())
+            .AndAbstract(_arena.safety_condition(), _controllable_cube)
+            .UnivAbstract(_uncontrollable_cube);
         
         attractor = attractor | controlled_predecessor;
+        
+        std::cout << fixpoint << std::endl;
+        std::cout << attractor << std::endl;
     }
 
-    return ~attractor;
+    std::cout << "END" << std::endl;
+    std::cout << ~attractor << std::endl;
+
+    return attractor;
 }
 
 aiger* SimpleSafetySolver::synthesize(const BDD& winning_region)
