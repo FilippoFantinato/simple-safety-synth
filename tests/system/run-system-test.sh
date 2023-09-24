@@ -11,6 +11,8 @@ examples=$2
 outdir=$base/controllers
 moduledir=$base/modules
 
+mkdir -p $outdir
+
 for f in `ls $examples`
 do
     name=${f%.*}.smv
