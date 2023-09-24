@@ -10,27 +10,21 @@ BDD SimpleSafetySolver::solve()
     BDD fixpoint  = _manager.bddZero();
     BDD attractor = ~_arena.safety_condition();
 
-    unsigned round = 0;
+    // unsigned round = 0;
     while(fixpoint != attractor)
     {
-        std::cout << "Round: " << ++round << std::endl;
+        // std::cout << "Round: " << ++round << std::endl;
 
         fixpoint = attractor;
         
         BDD controlled_predecessor = attractor.VectorCompose(_arena.compose())
-            .AndAbstract(_arena.safety_condition(), _controllable_cube)
-            .UnivAbstract(_uncontrollable_cube);
+            .UnivAbstract(_controllable_cube)
+            .ExistAbstract(_uncontrollable_cube);
         
         attractor = attractor | controlled_predecessor;
-        
-        std::cout << fixpoint << std::endl;
-        std::cout << attractor << std::endl;
     }
 
-    std::cout << "END" << std::endl;
-    std::cout << ~attractor << std::endl;
-
-    return attractor;
+    return !(_arena.initial() <= ~attractor) ? _manager.bddZero() : ~attractor;
 }
 
 aiger* SimpleSafetySolver::synthesize(const BDD& winning_region)

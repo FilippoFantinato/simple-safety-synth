@@ -12,13 +12,46 @@ SafetyArena::SafetyArena(aiger *aig, const Cudd& manager) : _manager(manager)
     for(unsigned i = 0; i < aig->num_inputs; ++i)
     {
         aiger_symbol *input = aig->inputs + i;
-        add_input(input, &cache);
+        BDD node = _manager.bddVar(_var_index++);
+
+        if(Utils::Aiger::is_controllable(input->name))
+        {
+            _controllables.push_back(node);
+            _controllables_names.push_back(input->lit);
+        }
+        else
+        {
+            _uncontrollables.push_back(node);
+            _uncontrollables_names.push_back(input->lit);
+        }
+
+        cache[input->lit] = node;
+        _compose.push_back(node);
+        Cudd_bddSetPiVar(_manager.getManager(), node.NodeReadIndex());
     }
 
     for (unsigned i = 0; i < aig->num_latches; ++i)
     {
         aiger_symbol *latch = aig->latches + i;
-        add_latch(latch, &cache);
+        BDD node = _manager.bddVar(_var_index++);
+
+        Cudd_bddSetPsVar(_manager.getManager(), node.NodeReadIndex());
+
+        switch (latch->reset)
+        {
+        case 0:
+            _initial &= ~node;
+            break;
+        case 1:
+            _initial &= node;
+            break;
+        default:
+            throw std::runtime_error("Error in AIGER input: only 0 and 1 is allowed for initial latch values.");
+        }
+
+        cache[latch->lit] = node;
+        _latches.push_back(node);
+        _latches_names.push_back(latch->lit);
     }
 
     {
@@ -51,49 +84,6 @@ SafetyArena::SafetyArena(aiger *aig, const Cudd& manager) : _manager(manager)
         aiger_symbol *output = aig->outputs + i;
         _safety_condition &= ~lookup_literal(output->lit, cache);
     }
-}
-
-void SafetyArena::add_input(aiger_symbol *input, std::unordered_map<AigerLit, BDD> *cache)
-{
-    BDD node = _manager.bddVar(_var_index++);
-
-    if(Utils::Aiger::is_controllable(input->name))
-    {
-        _controllables.push_back(node);
-        _controllables_names.push_back(input->lit);
-    }
-    else
-    {
-        _uncontrollables.push_back(node);
-        _uncontrollables_names.push_back(input->lit);
-    }
-
-    (*cache)[input->lit] = node;
-    _compose.push_back(node);
-    Cudd_bddSetPiVar(_manager.getManager(), node.NodeReadIndex());
-}
-
-void SafetyArena::add_latch(aiger_symbol *latch, std::unordered_map<AigerLit, BDD> *cache)
-{
-    BDD node = _manager.bddVar(_var_index++);
-
-    Cudd_bddSetPsVar(_manager.getManager(), node.NodeReadIndex());
-
-    switch (latch->reset)
-    {
-    case 0:
-        _initial &= ~node;
-        break;
-    case 1:
-        _initial &= node;
-        break;
-    default:
-        throw std::runtime_error("Error in AIGER input: only 0 and 1 is allowed for initial latch values.");
-    }
-
-    (*cache)[latch->lit] = node;
-    _latches.push_back(node);
-    _latches_names.push_back(latch->lit);
 }
 
 void SafetyArena::add_and(aiger_and *symb,

@@ -18,11 +18,7 @@ BDD BetterSafetySolver::solve()
         fixpoint = safe_states;
         safe_states &= pre(safe_states);
         
-        // std::cout << fixpoint << std::endl;
-        // std::cout << safe_states << std::endl;
-        // std::cout << (_arena.initial() > safe_states) << std::endl;
-
-        if(_arena.initial() > safe_states)
+        if(!(_arena.initial() <= safe_states))
         {
             return _manager.bddZero();
         }
@@ -62,12 +58,12 @@ aiger* BetterSafetySolver::synthesize(const BDD& winning_region)
 
 BDD BetterSafetySolver::pre(const BDD& states)
 {
-    // return states.VectorCompose(_arena.compose())
-    //         .AndAbstract(_arena.safety_condition(), _controllable_cube)
-    //         .UnivAbstract(_uncontrollable_cube);
-    return (states.VectorCompose(_arena.compose()) & _arena.safety_condition())
-            .UnivAbstract(_uncontrollable_cube)
-            .ExistAbstract(_controllable_cube);
+    return states.VectorCompose(_arena.compose())
+            .AndAbstract(_arena.safety_condition(), _controllable_cube)
+            .UnivAbstract(_uncontrollable_cube);
+    // return (states.VectorCompose(_arena.compose()) & _arena.safety_condition())
+    //         .UnivAbstract(_uncontrollable_cube)
+    //         .ExistAbstract(_controllable_cube);
 }
 
 std::vector<BDD> BetterSafetySolver::get_strategies(const BDD& winning_region)

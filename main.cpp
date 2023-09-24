@@ -47,7 +47,7 @@ int main(int argc, char const *argv[])
     Cudd manager;
 
     SafetyArena arena(aig_arena, manager);
-    SafetySolver *solver = new BetterSafetySolver(arena, manager);
+    SafetySolver *solver = new SimpleSafetySolver(arena, manager);
 
     BDD winning_region = solver->solve();
 
