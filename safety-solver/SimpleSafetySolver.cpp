@@ -24,7 +24,11 @@ BDD SimpleSafetySolver::solve()
         attractor = attractor | controlled_predecessor;
     }
 
-    return !(_arena.initial() <= ~attractor) ? _manager.bddZero() : ~attractor;
+    BDD arena = ~attractor;
+
+    return (_arena.initial() & arena) != _arena.initial() ? 
+            _manager.bddZero() : 
+            arena;
 }
 
 aiger* SimpleSafetySolver::synthesize(const BDD& winning_region)
@@ -58,39 +62,33 @@ aiger* SimpleSafetySolver::synthesize(const BDD& winning_region)
 
 std::vector<BDD> SimpleSafetySolver::get_strategies(const BDD& winning_region)
 {
-    BDD care_set = winning_region;
-    BDD nondeterministic_strategy = winning_region.VectorCompose(_arena.compose()) & _arena.safety_condition();
+    BDD nondeterministic_strategy = winning_region.VectorCompose(_arena.compose());
     const std::vector<BDD>& controllables = _arena.controllables();
 
     std::vector<BDD> strategies;
-    for(auto c: controllables)
+    for(const auto& c: controllables)
     {
-        BDD winning_controllables = nondeterministic_strategy;
-
-        std::vector<BDD> other_controllables;
-        for(auto o_c: controllables) if(o_c != c) other_controllables.push_back(o_c);
-
-        if(other_controllables.size() > 0)
-        {
-            winning_controllables = winning_controllables.ExistAbstract(
-                std::accumulate(other_controllables.begin(), other_controllables.end(), _manager.bddOne(), [](const BDD& acc, const BDD& el){return acc&el;})
+        BDD winning_controllables = 
+            nondeterministic_strategy.ExistAbstract(
+                std::accumulate(
+                    controllables.begin(), 
+                    controllables.end(), 
+                    _manager.bddOne(), 
+                    [&c](const BDD& acc, const BDD& el){
+                        return c != el ? acc&el : acc;
+                    }
+                )
             );
-        }
 
         BDD canBeTrue   = winning_controllables.Cofactor(c);
         BDD canBeFalse  = winning_controllables.Cofactor(~c);
         BDD mustBeTrue  = (~canBeFalse) & canBeTrue;
         BDD mustBeFalse = (~canBeTrue) & canBeFalse;
-
-        BDD local_care_set = care_set & (mustBeTrue | mustBeFalse);
-
-        BDD model_true = mustBeTrue.Restrict(local_care_set);
-        BDD model_false = (~mustBeFalse).Restrict(local_care_set);
-
-        BDD model = model_true.nodeCount() < model_false.nodeCount() ? model_true : model_false;
+        
+        BDD care_set = mustBeTrue | mustBeFalse;
+        BDD model    = mustBeTrue.Restrict(care_set);
 
         strategies.push_back(model);
-        
         nondeterministic_strategy &= c.Xnor(model);
     }
 
