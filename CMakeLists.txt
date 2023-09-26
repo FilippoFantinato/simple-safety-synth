@@ -12,14 +12,6 @@ find_library(cudd REQUIRED NAMES libcudd.a)
 # find_package(aiger REQUIRED NAMES libaiger.a PATHS ${CMAKE_SOURCE_DIR}/aiger)
 find_program(BASH_EXECUTABLE NAMES bash REQUIRED)
 
-# set(CUDD_LIBS
-#     ${CMAKE_SOURCE_DIR}/cudd/obj/libobj.a 
-#     ${CMAKE_SOURCE_DIR}/cudd/cudd/libcudd.a
-#     ${CMAKE_SOURCE_DIR}/cudd/mtr/libmtr.a 
-#     ${CMAKE_SOURCE_DIR}/cudd/st/libst.a 
-#     ${CMAKE_SOURCE_DIR}/cudd/util/libutil.a
-#     ${CMAKE_SOURCE_DIR}/cudd/epd/libepd.a
-# )
 set(AIGER_LIBS ${CMAKE_SOURCE_DIR}/aiger/libaiger.a)
 
 add_executable(simple-safety-synth
@@ -49,5 +41,5 @@ enable_testing()
 
 add_test(
     NAME SystemTests
-    COMMAND sh ../tests/system/run-system-test.sh
+    COMMAND bash ../tests/system/run-system-test.sh
 )
