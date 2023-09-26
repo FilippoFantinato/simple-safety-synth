@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function exec_nusmv_no_warnings () {
+function exec_nusmv_no_warnings {
     NuSMV -source $1 2> /dev/null
 }
 
