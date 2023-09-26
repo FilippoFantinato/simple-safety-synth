@@ -22,8 +22,9 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
     - name: Install conan
-      run: pip install conan
-      run: conan profile detect --force
+      run: |
+        pip install conan
+        conan profile detect --force
     - name: Install missing dependencies
       run: conan install . --output-folder=build --build=missing 
     - name: Configure CMake
