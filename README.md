@@ -1,6 +1,6 @@
 # Simple Safety Synth
 
-[![Main build](https://github.com/FilippoFantinato/simple-safety-synth/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/FilippoFantinato/simple-safety-synth/actions/workflows/build-main.yml)
-[![Develop build](https://github.com/FilippoFantinato/simple-safety-synth/actions/workflows/build.yml/badge.svg?branch=develop)](https://github.com/FilippoFantinato/simple-safety-synth/actions/workflows/build-develop.yml)
+[![Build Main](https://github.com/FilippoFantinato/simple-safety-synth/actions/workflows/build-main.yml/badge.svg)](https://github.com/FilippoFantinato/simple-safety-synth/actions/workflows/build-main.yml)
+[![Build Develop](https://github.com/FilippoFantinato/simple-safety-synth/actions/workflows/build-develop.yml/badge.svg)](https://github.com/FilippoFantinato/simple-safety-synth/actions/workflows/build-develop.yml)
 
 Just a simple safety synthesizer to learn more about this topic.
