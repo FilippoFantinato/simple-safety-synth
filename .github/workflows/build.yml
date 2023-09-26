@@ -18,7 +18,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
     - name: APT install
-      uses: sudo apt-get install -y automake
+      run: sudo apt-get install -y automake
     - name: Install conan and dependencies
       run: |
         pip install conan
