@@ -17,20 +17,20 @@ jobs:
     - uses: actions/checkout@v3
     - name: Set up Python
       uses: actions/setup-python@v4
-    - name: Automake 1.14 installation
-      run: |
-        wget https://mirrors.edge.kernel.org/ubuntu/pool/main/a/automake-1.14/automake_1.14.1-2ubuntu1_all.deb
-        sudo apt install -y --allow-downgrades ./automake_1.14.1-2ubuntu1_all.deb
     - name: Install conan and dependencies
       run: |
         pip install conan
         conan profile detect --force
         conan install . --output-folder=build --build=missing
+    - name: Automake 1.14 installation
+      run: |
+        wget https://mirrors.edge.kernel.org/ubuntu/pool/main/a/automake-1.14/automake_1.14.1-2ubuntu1_all.deb
+        sudo apt install -y --allow-downgrades ./automake_1.14.1-2ubuntu1_all.deb
     - name: Install cudd
       run: |
         git clone https://github.com/rakhimov/cudd.git
         cd cudd
-        ./configure --enable-silent-rules --enable-shared --enable-dddmp --enable-obj --with-system-qsort
+        ./configure --enable-obj
         make -j
         make check
         sudo make install
