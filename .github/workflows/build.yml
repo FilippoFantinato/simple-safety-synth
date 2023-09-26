@@ -18,7 +18,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
     - name: Automake 1.14 installation
-      run:
+      run: |
         wget https://mirrors.edge.kernel.org/ubuntu/pool/main/a/automake-1.14/automake_1.14.1-2ubuntu1_all.deb
         sudo apt install ./automake_1.14.1-2ubuntu1_all.deb
     - name: Install conan and dependencies
