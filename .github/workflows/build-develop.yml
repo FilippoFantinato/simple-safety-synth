@@ -22,7 +22,7 @@ jobs:
         pip install conan
         conan profile detect --force
         conan install . --output-folder=build --build=missing
-    - name: Automake 1.14 installation
+    - name: Install automake-1.14
       run: |
         wget https://mirrors.edge.kernel.org/ubuntu/pool/main/a/automake-1.14/automake_1.14.1-2ubuntu1_all.deb
         sudo apt install -y --allow-downgrades ./automake_1.14.1-2ubuntu1_all.deb
