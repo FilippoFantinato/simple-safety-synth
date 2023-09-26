@@ -64,4 +64,6 @@ echo "!Invariant becomes true in $not_invariant_cnt controllers."
 if [[ $formula_cnt == 0 && ($invariant_cnt == 0 && $not_invariant_cnt == 0) ]]
 then
     echo "Everything is fine!"
+else
+    exit 1
 fi

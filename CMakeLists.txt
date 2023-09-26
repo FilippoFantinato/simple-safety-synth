@@ -7,6 +7,8 @@ set(CMAKE_MODULE_LINKER_FLAGS "-lm -pthread -ldl")
 
 find_package(argparse REQUIRED)
 
+find_program(BASH_EXECUTABLE NAMES bash REQUIRED)
+
 set(CUDD_PATH ${CMAKE_SOURCE_DIR}/cudd)
 set(CUDD_LIBS
     ${CUDD_PATH}/obj/libobj.a 
@@ -42,4 +44,11 @@ target_link_libraries(simple-safety-synth
     ${CUDD_LIBS}
     ${AIGER_LIBS}
     argparse::argparse
+)
+
+enable_testing()
+
+add_test(
+    NAME SystemTests
+    COMMAND sh ../tests/system/run-system-test.sh
 )
