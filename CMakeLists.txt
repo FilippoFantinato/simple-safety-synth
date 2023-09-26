@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 project(simple-safety-synth)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -O3 -g -pthread -D NDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 -g")
@@ -9,7 +11,6 @@ set(CMAKE_MODULE_LINKER_FLAGS "-lm -pthread -ldl -lcudd")
 
 find_package(argparse REQUIRED)
 find_library(cudd REQUIRED NAMES libcudd.a)
-# find_package(aiger REQUIRED NAMES libaiger.a PATHS ${CMAKE_SOURCE_DIR}/aiger)
 find_program(BASH_EXECUTABLE NAMES bash REQUIRED)
 
 set(AIGER_LIBS ${CMAKE_SOURCE_DIR}/aiger/libaiger.a)
@@ -31,11 +32,13 @@ add_executable(simple-safety-synth
     utils/aiger2smv.cpp
 )
 
-target_link_libraries(simple-safety-synth PRIVATE
+target_link_libraries(simple-safety-synth
     cudd
     ${AIGER_LIBS}
     argparse::argparse
 )
+
+target_include_directories(simple-safety-synth PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/aiger)
 
 enable_testing()
 

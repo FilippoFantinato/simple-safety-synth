@@ -11,8 +11,7 @@
 #include <unordered_map>
 #include <cudd.h>
 #include <cuddObj.hh>
-
-#include "../aiger/aiger.h"
+#include <aiger.h>
 
 #define CONTROLLABLE_PREFIX "controllable_"
 #define CONTROLLABLE_PREFIX_LEN 13
