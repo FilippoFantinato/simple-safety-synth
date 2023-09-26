@@ -18,7 +18,9 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
     - name: APT install
-      run: sudo apt-get install -y autotools-dev autoconf
+      run:
+        sudo apt update && sudo apt upgrade 
+        sudo apt-get install -y autotools-dev autoconf
     - name: Install conan and dependencies
       run: |
         pip install conan
