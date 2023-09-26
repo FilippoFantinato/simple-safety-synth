@@ -24,13 +24,11 @@ jobs:
         conan install . --output-folder=build --build=missing
     - name: Install cudd
       run: |
-        cd cudd
-        ./setup.sh
-        make -j
+        ./cudd/setup.sh
+        make -C cudd
     - name: Install aiger
       run: |
-        cd aiger
-        make -j
+        make -C aiger
     - name: Configure CMake
       run: > 
         cmake -B ${{github.workspace}}/build 

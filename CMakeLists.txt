@@ -9,19 +9,17 @@ find_package(argparse REQUIRED)
 
 find_program(BASH_EXECUTABLE NAMES bash REQUIRED)
 
-set(CUDD_PATH ${CMAKE_SOURCE_DIR}/cudd)
 set(CUDD_LIBS
-    ${CUDD_PATH}/obj/libobj.a 
-    ${CUDD_PATH}/cudd/libcudd.a 
-    ${CUDD_PATH}/mtr/libmtr.a 
-    ${CUDD_PATH}/st/libst.a 
-    ${CUDD_PATH}/util/libutil.a
-    ${CUDD_PATH}/epd/libepd.a
+    ${CMAKE_SOURCE_DIR}/cudd/obj/libobj.a 
+    ${CMAKE_SOURCE_DIR}/cudd/cudd/libcudd.a 
+    ${CMAKE_SOURCE_DIR}/cudd/mtr/libmtr.a 
+    ${CMAKE_SOURCE_DIR}/cudd/st/libst.a 
+    ${CMAKE_SOURCE_DIR}/cudd/util/libutil.a
+    ${CMAKE_SOURCE_DIR}/cudd/epd/libepd.a
 )
-set(AIGER_PATH ${CMAKE_SOURCE_DIR}/aiger)
-set(AIGER_LIBS ${AIGER_PATH}/libaiger.a)
+set(AIGER_LIBS ${CMAKE_SOURCE_DIR}/aiger/libaiger.a)
 
-include_directories(${CUDD_PATH}/include)
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_executable(simple-safety-synth
     main.cpp
