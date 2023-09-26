@@ -58,6 +58,7 @@
         "charconv": "cpp",
         "iomanip": "cpp",
         "variant": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "cassert": "cpp"
     }
 }

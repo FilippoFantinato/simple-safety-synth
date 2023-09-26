@@ -7,10 +7,7 @@
 #include <unordered_set>
 #include <vector>
 #include <cstdio>
-
-#include "../aiger/aiger.h"
-#include "../cudd/include/cuddObj.hh"
-#include "../cudd/include/cudd.h"
+#include <cuddObj.hh>
 
 #include "../utils/aiger.h"
 

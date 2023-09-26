@@ -4,10 +4,8 @@
 #include <unordered_map>
 #include <functional>
 #include <cassert>
+#include <cuddObj.hh>
 
-#include "../cudd/include/cuddObj.hh"
-#include "../cudd/include/cudd.h"
-#include "../aiger/aiger.h"
 #include "../utils/aiger.h"
 
 struct BDDHash
@@ -33,9 +31,9 @@ public:
     aiger* get_encoding();
 
     void add_input(const BDD& node, AigerLit name);
-    void add_latch(const BDD& node, AigerLit name);
+    void add_latch(const BDD& node);
     void add_output(const BDD& node, AigerLit name);
-    
+
     // void define_latch(const BDD& node, const BDD& next_node)
     // {
     //     AigerLit lit = _bdd2lit[node];

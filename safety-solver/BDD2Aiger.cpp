@@ -25,7 +25,7 @@ void BDD2Aiger::add_input(const BDD& node, AigerLit name)
     _bddidx2lit[node.NodeReadIndex()] = lit;
 }
 
-void BDD2Aiger::add_latch(const BDD& node, AigerLit name)
+void BDD2Aiger::add_latch(const BDD& node)
 {
     AigerLit lit = Utils::Aiger::next_var_index(_aig);
     aiger_add_latch(_aig, lit, 0, nullptr);

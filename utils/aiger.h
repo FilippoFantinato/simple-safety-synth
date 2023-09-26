@@ -9,10 +9,10 @@
 #include <vector>
 #include <cassert>
 #include <unordered_map>
+#include <cudd.h>
+#include <cuddObj.hh>
 
 #include "../aiger/aiger.h"
-#include "../cudd/include/cuddObj.hh"
-#include "../cudd/include/cudd.h"
 
 #define CONTROLLABLE_PREFIX "controllable_"
 #define CONTROLLABLE_PREFIX_LEN 13

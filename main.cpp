@@ -1,7 +1,6 @@
 #include <iostream>
 #include <argparse/argparse.hpp>
-
-#include "./cudd/include/cuddObj.hh"
+#include <cuddObj.hh>
 
 #include "./safety-arena/SafetyArena.h"
 #include "./safety-solver/SimpleSafetySolver.h"

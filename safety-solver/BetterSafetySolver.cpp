@@ -41,11 +41,10 @@ aiger* BetterSafetySolver::synthesize(const BDD& winning_region)
         encoder.add_input(uncontrollables[i], uncontrollables_names[i]);
     }
 
-    const auto& latches       = _arena.latches();
-    const auto& latches_names = _arena.latches_names();
+    const auto& latches = _arena.latches();
     for(size_t i = 0; i < _arena.latches().size(); ++i)
     {
-        encoder.add_latch(latches[i], latches_names[i]);
+        encoder.add_latch(latches[i]);
     }
 
     const auto& controllables_names = _arena.controllables_names();

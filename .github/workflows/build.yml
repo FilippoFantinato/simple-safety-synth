@@ -24,8 +24,12 @@ jobs:
         conan install . --output-folder=build --build=missing
     - name: Install cudd
       run: |
-        ./cudd/setup.sh
-        make -C cudd
+        git clone https://github.com/rakhimov/cudd.git
+        cd cudd
+        ./configure --enable-silent-rules --enable-shared --enable-dddmp --enable-obj --with-system-qsort
+        make -j
+        make check
+        sudo make install
     - name: Install aiger
       run: |
         make -C aiger

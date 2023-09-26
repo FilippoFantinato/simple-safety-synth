@@ -3,9 +3,8 @@
 
 #include <algorithm>
 #include <numeric>
+#include <cuddObj.hh>
 
-#include "../cudd/include/cuddObj.hh"
-#include "../cudd/include/cudd.h"
 #include "../safety-arena/SafetyArena.h"
 
 class SafetySolver
