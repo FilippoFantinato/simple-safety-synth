@@ -35,6 +35,7 @@ add_executable(simple-safety-synth
     safety-solver/BetterSafetySolver.cpp
     utils/aiger.h
     utils/aiger.cpp
+    utils/aiger2smv.cpp
 )
 
 target_link_libraries(simple-safety-synth

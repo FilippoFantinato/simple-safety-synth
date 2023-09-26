@@ -1,0 +1,9 @@
+MODULE main
+IVAR
+	c : boolean;
+	u : boolean;
+LTLSPEC c U[0,3] u
+
+--INPUT   : u
+--OUTPUT  : c
+--UNREALIZABLE

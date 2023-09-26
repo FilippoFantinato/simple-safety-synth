@@ -25,8 +25,9 @@ BDD SimpleSafetySolver::solve()
     }
 
     BDD arena = ~attractor;
+    const BDD& initial = _arena.initial();
 
-    return (_arena.initial() & arena) != _arena.initial() ? 
+    return (initial & arena) != initial ? 
             _manager.bddZero() : 
             arena;
 }
@@ -48,7 +49,7 @@ aiger* SimpleSafetySolver::synthesize(const BDD& winning_region)
     const auto& latches_names = _arena.latches_names();
     for(size_t i = 0; i < _arena.latches().size(); ++i)
     {
-        encoder.add_latch(latches[i], latches_names[i]);
+        encoder.add_input(latches[i], latches_names[i]);
     }
 
     const auto& controllables_names = _arena.controllables_names();

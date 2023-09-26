@@ -9,6 +9,7 @@ BDD BetterSafetySolver::solve()
 {
     BDD fixpoint    = _manager.bddZero();
     BDD safe_states = _manager.bddOne();
+    const BDD& initial = _arena.initial();
 
     // unsigned round = 0;
     while(fixpoint != safe_states)
@@ -18,7 +19,7 @@ BDD BetterSafetySolver::solve()
         fixpoint = safe_states;
         safe_states &= pre(safe_states);
         
-        if(!(_arena.initial() <= safe_states))
+        if((initial & safe_states) != initial)
         {
             return _manager.bddZero();
         }

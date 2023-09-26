@@ -9,7 +9,7 @@ base="$(dirname -- "${BASH_SOURCE[0]}")"
 exec=$1
 examples=$2
 outdir=$base/controllers
-moduledir=$base/modules
+moduledir=$base/../../examples/modules
 
 mkdir -p $outdir
 

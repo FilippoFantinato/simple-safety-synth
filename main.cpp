@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
                 const std::vector<std::string> c = {"sub", "main"};
                 auto it = std::find(c.begin(), c.end(), value);
                 if (it != c.end()) {
-                    return it - c.begin() + 1;
+                    return it - c.begin();
                 }
                 throw std::runtime_error("Error parsing argument --smv: value not in {sub, main}");
            });
@@ -69,7 +69,7 @@ int main(int argc, char const *argv[])
                                         new std::ofstream(*output) : 
                                         &std::cout;
 
-                Utils::Aiger::write_aiger_to_smv(*outfile, combined, *smv == 1);
+                Utils::Aiger::write_smv(*outfile, combined, *smv == 0);
 
                 outfile->flush();
             }
