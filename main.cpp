@@ -1,4 +1,6 @@
 #include <iostream>
+#include <sstream>
+#include <filesystem>
 #include <argparse/argparse.hpp>
 #include <cuddObj.hh>
 
@@ -7,13 +9,21 @@
 #include "./safety-solver/BetterSafetySolver.h"
 
 using argparse::ArgumentParser;
+namespace fs = std::filesystem;
 
 int main(int argc, char const *argv[])
 {
     ArgumentParser args("simple-safety-synth");
     args.add_argument("input")
            .help("Input file in either aag or aig format")
-           .required();
+           .required()
+           .action([](const std::string& value) -> const std::string& {
+            if(fs::exists(value)) return value;
+
+            std::stringstream ss;
+            ss << "Error with input: \"" << value << "\" does not exist" << std::endl;
+            throw std::runtime_error(ss.str());
+           });
     args.add_argument("-s", "--synthesize")
            .help("Whether synthesizing the strategy or not")
            .default_value(false)
@@ -41,7 +51,7 @@ int main(int argc, char const *argv[])
         std::cerr << args;
         std::exit(1);
     }
-    
+
     aiger *aig_arena = Utils::Aiger::open_aiger(args.get("input").c_str());
     Cudd manager;
 

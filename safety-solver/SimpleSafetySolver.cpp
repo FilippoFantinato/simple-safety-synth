@@ -81,13 +81,13 @@ std::vector<BDD> SimpleSafetySolver::get_strategies(const BDD& winning_region)
                 )
             );
 
-        BDD canBeTrue   = winning_controllables.Cofactor(c);
-        BDD canBeFalse  = winning_controllables.Cofactor(~c);
-        BDD mustBeTrue  = (~canBeFalse) & canBeTrue;
-        BDD mustBeFalse = (~canBeTrue) & canBeFalse;
-        
-        BDD care_set = mustBeTrue | mustBeFalse;
-        BDD model    = mustBeTrue.Restrict(care_set);
+        BDD can_be_true   = winning_controllables.Cofactor(c);
+        BDD can_be_false  = winning_controllables.Cofactor(~c);
+        BDD must_be_true  = (~can_be_false) & can_be_true;
+        BDD must_be_false = (~can_be_true) & can_be_false;
+        BDD care_set      = must_be_true | must_be_false;
+
+        BDD model = must_be_true.Restrict(care_set);
 
         strategies.push_back(model);
         nondeterministic_strategy &= c.Xnor(model);

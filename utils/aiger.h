@@ -9,7 +9,6 @@
 #include <vector>
 #include <cassert>
 #include <unordered_map>
-#include <cudd.h>
 #include <cuddObj.hh>
 #include <aiger.h>
 

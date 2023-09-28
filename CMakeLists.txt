@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.10)
 
 project(simple-safety-synth)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -O3 -g -pthread -D NDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 -g")
-set(CMAKE_MODULE_LINKER_FLAGS "-lm -pthread -ldl -lcudd")
+set(CMAKE_SHARED_LINKER_FLAGS "-lm -pthread -ldl -lcudd")
 
 find_package(argparse REQUIRED)
 find_library(cudd REQUIRED NAMES libcudd.a)
@@ -32,7 +32,7 @@ add_executable(simple-safety-synth
     utils/aiger2smv.cpp
 )
 
-target_link_libraries(simple-safety-synth
+target_link_libraries(simple-safety-synth PRIVATE
     cudd
     ${AIGER_LIBS}
     argparse::argparse
