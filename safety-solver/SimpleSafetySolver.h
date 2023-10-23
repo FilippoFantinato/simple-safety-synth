@@ -4,9 +4,9 @@
 #include <iostream>
 
 #include "./BDD2Aiger.h"
-#include "./SafetySolver.h"
+#include "./GameSolver.h"
 
-class SimpleSafetySolver : public SafetySolver
+class SimpleSafetySolver : public GameSolver
 {
 private:
     std::vector<BDD> get_strategies(const BDD& winning_region) override;

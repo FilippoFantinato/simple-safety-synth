@@ -31,19 +31,19 @@ namespace Utils::Aiger
         return name.find(CONTROLLABLE_PREFIX) != std::string::npos;
     }
 
-    unsigned create_and(aiger *aig, AigerLit lhs, AigerLit rhs)
+    AigerLit create_and(aiger *aig, AigerLit lhs, AigerLit rhs)
     {
         if(lhs == aiger_false || rhs == aiger_false) return aiger_false; 
         if(lhs == aiger_true) return rhs;
         if(rhs == aiger_true) return lhs;
         
         assert(lhs > aiger_true && rhs > aiger_true);
-        unsigned lit = Utils::Aiger::next_var_index(aig);
+        AigerLit lit = Utils::Aiger::next_var_index(aig);
         aiger_add_and(aig, lit, lhs, rhs);
         return lit;
     }
 
-    unsigned translate_lit(aiger *aig, unsigned offset, unsigned lit)
+    AigerLit translate_lit(aiger *aig, unsigned offset, AigerLit lit)
     {
         bool negated = is_negated(lit);
         AigerLit normalized = normalize(lit);
@@ -67,6 +67,49 @@ namespace Utils::Aiger
         }
     }
 
+    aiger* invert_arena(aiger *arena)
+    {
+        aiger *aig = aiger_init();
+        
+        for(unsigned i = 0; i < arena->num_inputs; ++i)
+        {
+            aiger_symbol *input = arena->inputs + i;
+            
+            std::string name(input->name);
+            if(is_controllable(name))
+            {
+                name.erase(0, CONTROLLABLE_PREFIX_LEN);
+                aiger_add_input(aig, input->lit, name.c_str());
+            }
+            else
+            {
+                name = std::string(CONTROLLABLE_PREFIX) + input->name;
+                aiger_add_input(aig, input->lit, name.c_str());
+            }
+        }
+
+        for(unsigned i = 0; i < arena->num_outputs; ++i)
+        {
+            aiger_symbol *output = arena->outputs + i;
+            aiger_add_output(aig, output->lit, output->name);
+        }
+
+        for(unsigned i = 0; i < arena->num_latches; ++i)
+        {
+            aiger_symbol *latch = arena->latches + i;
+            aiger_add_latch(aig, latch->lit, latch->next, latch->name);
+            aiger_add_reset(aig, latch->lit, latch->reset);
+        }
+
+        for(unsigned i = 0; i < arena->num_ands; ++i)
+        {
+            aiger_and *a = arena->ands + i;
+            aiger_add_and(aig, a->lhs, a->rhs0, a->rhs1);
+        }
+        
+        return aig;
+    }
+
     aiger* merge_arena_strategy(aiger *arena, aiger *strategy)
     {
         aiger *aig = aiger_init();
@@ -76,7 +119,7 @@ namespace Utils::Aiger
         for(unsigned i = 0; i < arena->num_inputs; ++i)
         {
             aiger_symbol *input = arena->inputs + i;
-            if(Utils::Aiger::is_controllable(input->name))
+            if(is_controllable(input->name))
             {
                 lit2name[input->lit] = input->name;
             }
@@ -93,12 +136,19 @@ namespace Utils::Aiger
             aiger_add_latch(aig, latch->lit, latch->next, latch->name);
         }
 
-        // outputs
-        for(unsigned i = 0; i < arena->num_outputs; ++i)
+        // outputs TODO: fix names for multiple outputs
+        AigerLit formula = aiger_not(arena->outputs->lit);
+        for(unsigned i = 1; i < arena->num_outputs; ++i)
         {
             aiger_symbol *output = arena->outputs + i;
-            aiger_add_output(aig, aiger_not(output->lit), OUTPUT_FORMULA);
+            formula = create_and(aig, formula, aiger_not(output->lit));
         }
+        aiger_add_output(aig, formula, OUTPUT_FORMULA);
+        // for(unsigned i = 0; i < arena->num_outputs; ++i)
+        // {
+        //     aiger_symbol *output = arena->outputs + i;
+        //     aiger_add_output(aig, aiger_not(output->lit), OUTPUT_FORMULA);
+        // }
 
         for(unsigned i = 0; i < arena->num_ands; ++i)
         {

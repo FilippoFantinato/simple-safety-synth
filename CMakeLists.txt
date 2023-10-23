@@ -21,12 +21,14 @@ add_executable(simple-safety-synth
     safety-arena/SafetyArena.cpp
     safety-solver/BDD2Aiger.h
     safety-solver/BDD2Aiger.cpp
-    safety-solver/SafetySolver.h
-    safety-solver/SafetySolver.cpp
+    safety-solver/GameSolver.h
+    safety-solver/GameSolver.cpp
     safety-solver/SimpleSafetySolver.h
     safety-solver/SimpleSafetySolver.cpp
     safety-solver/BetterSafetySolver.h
     safety-solver/BetterSafetySolver.cpp
+    safety-solver/SimpleCoSafetySolver.h
+    safety-solver/SimpleCoSafetySolver.cpp
     utils/aiger.h
     utils/aiger.cpp
     utils/aiger2smv.cpp

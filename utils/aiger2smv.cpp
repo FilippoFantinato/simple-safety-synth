@@ -27,6 +27,7 @@ namespace Utils::Aiger
         if(lhs == aiger_false || rhs == aiger_false) return "FALSE";
         if(lhs == aiger_true) return create_smv_literal(aig, rhs);
         if(rhs == aiger_true) return create_smv_literal(aig, lhs);
+        // if(rhs == lhs) return create_smv_literal(aig, lhs);
 
         return create_smv_literal(aig, lhs) + " & " + create_smv_literal(aig, rhs);
     }

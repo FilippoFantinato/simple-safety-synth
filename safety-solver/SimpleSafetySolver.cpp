@@ -1,7 +1,7 @@
 #include "./SimpleSafetySolver.h"
 
 SimpleSafetySolver::SimpleSafetySolver(const SafetyArena& arena, const Cudd& manager) 
-    : SafetySolver(arena, manager)
+    : GameSolver(arena, manager)
 {
 }
 
@@ -10,10 +10,10 @@ BDD SimpleSafetySolver::solve()
     BDD fixpoint  = _manager.bddZero();
     BDD attractor = ~_arena.safety_condition();
 
-    // unsigned round = 0;
+    unsigned round = 0;
     while(fixpoint != attractor)
     {
-        // std::cout << "Round: " << ++round << std::endl;
+        std::cout << "Round: " << ++round << std::endl;
 
         fixpoint = attractor;
         
@@ -32,6 +32,31 @@ BDD SimpleSafetySolver::solve()
             arena;
 }
 
+// BDD SimpleSafetySolver::solve()
+// {
+//     BDD fixpoint    = _manager.bddZero();
+//     BDD safe_states = _manager.bddOne();
+//     const BDD& initial = _arena.initial();
+
+//     unsigned round = 0;
+//     while(fixpoint != safe_states)
+//     {
+//         std::cout << "Round: " << ++round << std::endl;
+
+//         fixpoint = safe_states;
+//         safe_states &= (safe_states.VectorCompose(_arena.compose()) & _arena.safety_condition())
+//                         .UnivAbstract(_uncontrollable_cube)
+//                         .ExistAbstract(_controllable_cube);
+        
+//         if(!(initial <= safe_states))
+//         {
+//             return _manager.bddZero();
+//         }
+//     }
+
+//     return fixpoint;
+// }
+
 aiger* SimpleSafetySolver::synthesize(const BDD& winning_region)
 {
     std::vector<BDD> strategies = get_strategies(winning_region);
@@ -47,7 +72,7 @@ aiger* SimpleSafetySolver::synthesize(const BDD& winning_region)
 
     const auto& latches       = _arena.latches();
     const auto& latches_names = _arena.latches_names();
-    for(size_t i = 0; i < _arena.latches().size(); ++i)
+    for(size_t i = 0; i < latches.size(); ++i)
     {
         encoder.add_input(latches[i], latches_names[i]);
     }
@@ -81,13 +106,29 @@ std::vector<BDD> SimpleSafetySolver::get_strategies(const BDD& winning_region)
                 )
             );
 
-        BDD can_be_true   = winning_controllables.Cofactor(c);
-        BDD can_be_false  = winning_controllables.Cofactor(~c);
-        BDD must_be_true  = (~can_be_false) & can_be_true;
-        BDD must_be_false = (~can_be_true) & can_be_false;
+        BDD maybe_true   = winning_controllables.Cofactor(c);
+        BDD maybe_false  = winning_controllables.Cofactor(~c);
+
+        // BDD p = maybe_true * !maybe_false;
+        // BDD n = maybe_false * !maybe_true;
+        // for(const auto& u: _arena.uncontrollables())
+        // {
+        //     BDD p1 = p.ExistAbstract(u);
+        //     BDD n1 = n.ExistAbstract(u);
+        //     if((p1 & n1).IsZero()){
+        //         p = p1;
+        //         n = n1;
+        //     }
+        // }
+        // maybe_true = p;
+        // maybe_false = n;
+
+
+        BDD must_be_true  = (~maybe_false) & maybe_true;
+        BDD must_be_false = (~maybe_true) & maybe_false;
         BDD care_set      = must_be_true | must_be_false;
 
-        BDD model = must_be_true.Restrict(care_set);
+        BDD model = maybe_true.Restrict(care_set);
 
         strategies.push_back(model);
         nondeterministic_strategy &= c.Xnor(model);

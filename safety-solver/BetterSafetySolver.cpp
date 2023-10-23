@@ -1,7 +1,7 @@
 #include "./BetterSafetySolver.h"
 
 BetterSafetySolver::BetterSafetySolver(const SafetyArena& arena, const Cudd& manager) 
-    : SafetySolver(arena, manager)
+    : GameSolver(arena, manager)
 {
 }
 
@@ -11,15 +11,15 @@ BDD BetterSafetySolver::solve()
     BDD safe_states = _manager.bddOne();
     const BDD& initial = _arena.initial();
 
-    // unsigned round = 0;
+    unsigned round = 0;
     while(fixpoint != safe_states)
     {
-        // std::cout << "Round: " << ++round << std::endl;
+        std::cout << "Round: " << ++round << std::endl;
 
         fixpoint = safe_states;
         safe_states &= pre(safe_states);
         
-        if((initial & safe_states) != initial)
+        if(!(initial <= safe_states))
         {
             return _manager.bddZero();
         }

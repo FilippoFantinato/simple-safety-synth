@@ -59,6 +59,8 @@
         "iomanip": "cpp",
         "variant": "cpp",
         "fstream": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "codecvt": "cpp",
+        "ratio": "cpp"
     }
 }

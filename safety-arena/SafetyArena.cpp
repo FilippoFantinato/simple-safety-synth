@@ -14,6 +14,7 @@ SafetyArena::SafetyArena(aiger *aig, const Cudd& manager) : _manager(manager)
         aiger_symbol *input = aig->inputs + i;
         BDD node = _manager.bddVar(_var_index++);
 
+        Cudd_bddSetPiVar(_manager.getManager(), node.NodeReadIndex());
         if(Utils::Aiger::is_controllable(input->name))
         {
             _controllables.push_back(node);
@@ -27,7 +28,6 @@ SafetyArena::SafetyArena(aiger *aig, const Cudd& manager) : _manager(manager)
 
         cache[input->lit] = node;
         _compose.push_back(node);
-        Cudd_bddSetPiVar(_manager.getManager(), node.NodeReadIndex());
     }
 
     for (unsigned i = 0; i < aig->num_latches; ++i)
@@ -39,10 +39,10 @@ SafetyArena::SafetyArena(aiger *aig, const Cudd& manager) : _manager(manager)
 
         switch (latch->reset)
         {
-        case 0:
+        case 0: 
             _initial &= ~node;
             break;
-        case 1:
+        case 1: 
             _initial &= node;
             break;
         default:
@@ -75,14 +75,16 @@ SafetyArena::SafetyArena(aiger *aig, const Cudd& manager) : _manager(manager)
     for (unsigned i = 0; i < aig->num_latches; ++i)
     {
         aiger_symbol *latch = aig->latches + i;
-        const BDD& f = lookup_literal(latch->next, cache);
+        BDD f = lookup_literal(latch->next, cache);
         _compose.push_back(f);
     }
 
     for (unsigned i = 0; i < aig->num_outputs; ++i)
     {
         aiger_symbol *output = aig->outputs + i;
-        _safety_condition &= ~lookup_literal(output->lit, cache);
+        BDD invariant = ~lookup_literal(output->lit, cache);
+        _invariants.push_back(invariant);
+        _safety_condition &= invariant;
     }
 }
 
@@ -91,7 +93,8 @@ void SafetyArena::add_and(aiger_and *symb,
                           std::unordered_map<AigerLit, bool> *visited, 
                           std::unordered_map<AigerLit, BDD> *cache)
 {
-    if(visited->at(symb->lhs) && cache->count(symb->lhs) == 0) throw std::runtime_error("Cyclic dependency.");
+    if(visited->at(symb->lhs) && cache->count(symb->lhs) == 0) 
+        throw std::runtime_error("Error in Aiger format: there exists a cyclic dependency.");
 
     (*visited)[symb->lhs] = true;
 
@@ -158,4 +161,9 @@ const std::vector<BDD>& SafetyArena::latches() const
 const std::vector<BDD>& SafetyArena::compose() const
 {
     return _compose;
+}
+
+const std::vector<BDD>& SafetyArena::invariants() const
+{
+    return _invariants;
 }

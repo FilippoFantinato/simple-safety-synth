@@ -27,9 +27,11 @@ namespace Utils::Aiger
     AigerLit next_var_index(aiger *aig);
     
     bool is_controllable(const std::string& name);
-    unsigned create_and(aiger *aig, AigerLit lhs, AigerLit rhs);
-    unsigned translate_lit(aiger *aig, unsigned offset, unsigned lit);
+    AigerLit create_and(aiger *aig, AigerLit lhs, AigerLit rhs);
+    AigerLit translate_lit(aiger *aig, unsigned offset, AigerLit lit);
 
+    aiger* invert_arena(aiger *arena);
+    
     aiger* merge_arena_strategy(aiger *arena, aiger *strategy);
 
     void write_smv(std::ostream& outfile, aiger *aig, bool submodule);

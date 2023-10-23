@@ -1,5 +1,5 @@
-#ifndef SAFETY_SOLVER_H
-#define SAFETY_SOLVER_H
+#ifndef GAME_SOLVER_H
+#define GAME_SOLVER_H
 
 #include <algorithm>
 #include <numeric>
@@ -7,7 +7,7 @@
 
 #include "../safety-arena/SafetyArena.h"
 
-class SafetySolver
+class GameSolver
 {
 protected:
     const SafetyArena& _arena;
@@ -19,8 +19,8 @@ protected:
     virtual std::vector<BDD> get_strategies(const BDD& winning_region) = 0;
 
 public:
-    SafetySolver(const SafetyArena& arena, const Cudd& manager);
-    virtual ~SafetySolver() = default;
+    GameSolver(const SafetyArena& arena, const Cudd& manager);
+    virtual ~GameSolver() = default;
 
     virtual BDD solve() = 0;
     virtual aiger* synthesize(const BDD& winning_region) = 0;

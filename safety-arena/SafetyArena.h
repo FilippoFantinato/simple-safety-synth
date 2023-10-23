@@ -30,6 +30,8 @@ private:
     std::vector<BDD> _uncontrollables;
     // BDD representing latch variables
     std::vector<BDD> _latches;
+    // BDD representing invariants
+    std::vector<BDD> _invariants;
 
     BDD _initial;
     BDD _safety_condition;
@@ -61,6 +63,7 @@ public:
     const std::vector<BDD>& controllables() const;
     const std::vector<BDD>& uncontrollables() const;
     const std::vector<BDD>& latches() const;
+    const std::vector<BDD>& invariants() const;
 };
 
 #endif

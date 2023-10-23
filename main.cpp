@@ -7,6 +7,7 @@
 #include "./safety-arena/SafetyArena.h"
 #include "./safety-solver/SimpleSafetySolver.h"
 #include "./safety-solver/BetterSafetySolver.h"
+#include "./safety-solver/SimpleCoSafetySolver.h"
 
 using argparse::ArgumentParser;
 namespace fs = std::filesystem;
@@ -38,6 +39,10 @@ int main(int argc, char const *argv[])
                 }
                 throw std::runtime_error("Error parsing argument --smv: value not in {sub, main}");
            });
+    args.add_argument("--co-safety")
+            .help("Co safety synthesis")
+            .default_value(false)
+            .implicit_value(true);
     args.add_argument("-o", "--output")
            .help("Output file in either SMV or aag format");
 
@@ -52,14 +57,26 @@ int main(int argc, char const *argv[])
         std::exit(1);
     }
 
-    aiger *aig_arena = Utils::Aiger::open_aiger(args.get("input").c_str());
     Cudd manager;
-
-    SafetyArena arena(aig_arena, manager);
-    SafetySolver *solver = new SimpleSafetySolver(arena, manager);
+    aiger *aig_inverted_arena = nullptr;
+    aiger *aig_arena = Utils::Aiger::open_aiger(args.get("input").c_str());
+    GameSolver *solver = nullptr;
+    SafetyArena *arena;
+    
+    bool cosafety = args.get<bool>("--co-safety");
+    if(cosafety)
+    {
+        aig_inverted_arena = Utils::Aiger::invert_arena(aig_arena);
+        arena = new SafetyArena(aig_arena, manager);
+        solver = new SimpleCoSafetySolver(*arena, manager);
+    }
+    else
+    {
+        arena = new SafetyArena(aig_arena, manager);
+        solver = new SimpleSafetySolver(*arena, manager);
+    }
 
     BDD winning_region = solver->solve();
-
     if(winning_region != manager.bddZero())
     {
         std::cout << "Realizable" << std::endl;
@@ -67,7 +84,11 @@ int main(int argc, char const *argv[])
         if(args.get<bool>("--synthesize"))
         {
             aiger *strategy = solver->synthesize(winning_region);
-            aiger *combined = Utils::Aiger::merge_arena_strategy(aig_arena, strategy);
+            aiger *combined = Utils::Aiger::merge_arena_strategy(
+                                // cosafety ? aig_inverted_arena: aig_arena, 
+                                aig_arena,
+                                strategy
+                            );
 
             auto output = args.present("--output");
             auto smv = args.present<unsigned>("--smv");
@@ -100,6 +121,7 @@ int main(int argc, char const *argv[])
 
     delete aig_arena;
     delete solver;
+    if(aig_inverted_arena != nullptr) delete aig_inverted_arena;
 
     return 0;
 }

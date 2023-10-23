@@ -2,8 +2,8 @@
 
 BDD2Aiger::BDD2Aiger(const Cudd& manager) : _manager(manager)
 {
-    _aig = aiger_init(); aiger_reencode(_aig);
-    
+    _aig = aiger_init(); 
+
     _bdd2lit[_manager.bddOne()]  = aiger_true;
 }
 
@@ -14,6 +14,7 @@ BDD2Aiger::BDD2Aiger(const Cudd& manager) : _manager(manager)
 
 aiger* BDD2Aiger::get_encoding()
 {
+    aiger_reencode(_aig);
     return _aig;
 }
 
