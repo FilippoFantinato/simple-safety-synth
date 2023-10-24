@@ -18,26 +18,24 @@ BDD SimpleCoSafetySolver::solve()
     std::cout << std::endl;
     
     unsigned round = 0;
-    // _attractors.push_back(attractor);
     while(fixpoint != attractor)
     {
         std::cout << "Round: " << ++round << std::endl;
-        std::cout << "ATTRACTOR: " << attractor << std::endl;
-        // std::cout << "COMPOSE: " << attractor.VectorCompose(compose) << std::endl;
+        // std::cout << "ATTRACTOR: " << attractor << std::endl;
 
         fixpoint = attractor;
 
-        _attractors.insert(_attractors.begin(), attractor);
+        _attractors.insert(_attractors.begin(),
+            attractor.IsOne() ? initial : attractor
+        );
 
         BDD cpre = attractor.VectorCompose(compose)
                             .UnivAbstract(_uncontrollable_cube)
                             .ExistAbstract(_controllable_cube);
 
-        std::cout << "CPRE: " << cpre << std::endl;
+        // std::cout << "CPRE: " << cpre << std::endl;
         
         attractor = attractor | cpre;
-        
-        // if(fixpoint != attractor)
     }
 
     BDD arena = attractor;
@@ -110,8 +108,8 @@ std::vector<BDD> SimpleCoSafetySolver::get_strategies(const BDD& winning_region)
         BDD next_attractor =  _attractors[i + 1];
         BDD arena = attractor.VectorCompose(compose);
 
-        std::cout << "ATTRACTOR: " << attractor << std::endl;
-        std::cout << "ARENA: " << arena  << std::endl;
+        // std::cout << "ATTRACTOR: " << attractor << std::endl;
+        // std::cout << "ARENA: " << arena  << std::endl;
         // std::cout << ((attractor & initial) == initial) << std::endl;
 
         for(const BDD& c : controllables)
