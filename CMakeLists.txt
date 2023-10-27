@@ -25,8 +25,8 @@ add_executable(simple-safety-synth
     safety-solver/GameSolver.cpp
     safety-solver/SimpleSafetySolver.h
     safety-solver/SimpleSafetySolver.cpp
-    safety-solver/BetterSafetySolver.h
-    safety-solver/BetterSafetySolver.cpp
+    safety-solver/GFPSafetySolver.h
+    safety-solver/GFPSafetySolver.cpp
     safety-solver/SimpleCoSafetySolver.h
     safety-solver/SimpleCoSafetySolver.cpp
     utils/aiger.h

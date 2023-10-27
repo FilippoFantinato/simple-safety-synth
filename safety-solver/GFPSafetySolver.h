@@ -1,19 +1,18 @@
-#ifndef BETTER_SAFETY_SOLVER_H
-#define BETTER_SAFETY_SOLVER_H
+#ifndef GFP_SAFETY_SOLVER_H
+#define GFP_SAFETY_SOLVER_H
 
 #include <iostream>
 
 #include "./BDD2Aiger.h"
 #include "./GameSolver.h"
 
-class BetterSafetySolver : public GameSolver
+class GFPSafetySolver : public GameSolver
 {
 private:
-    BDD pre(const BDD& states);
     std::vector<BDD> get_strategies(const BDD& winning_region) override;
 
 public:
-    BetterSafetySolver(const SafetyArena& arena, const Cudd& manager);
+    GFPSafetySolver(const SafetyArena& arena, const Cudd& manager);
 
     BDD solve() override;
     aiger* synthesize(const BDD& winning_region) override;

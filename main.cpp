@@ -6,7 +6,7 @@
 
 #include "./safety-arena/SafetyArena.h"
 #include "./safety-solver/SimpleSafetySolver.h"
-#include "./safety-solver/BetterSafetySolver.h"
+#include "./safety-solver/GFPSafetySolver.h"
 #include "./safety-solver/SimpleCoSafetySolver.h"
 
 using argparse::ArgumentParser;
@@ -58,22 +58,18 @@ int main(int argc, char const *argv[])
     }
 
     Cudd manager;
-    aiger *aig_inverted_arena = nullptr;
     aiger *aig_arena = Utils::Aiger::open_aiger(args.get("input").c_str());
+    SafetyArena arena(aig_arena, manager);
     GameSolver *solver = nullptr;
-    SafetyArena *arena;
     
     bool cosafety = args.get<bool>("--co-safety");
     if(cosafety)
     {
-        aig_inverted_arena = Utils::Aiger::invert_arena(aig_arena);
-        arena = new SafetyArena(aig_arena, manager);
-        solver = new SimpleCoSafetySolver(*arena, manager);
+        solver = new SimpleCoSafetySolver(arena, manager);
     }
     else
     {
-        arena = new SafetyArena(aig_arena, manager);
-        solver = new SimpleSafetySolver(*arena, manager);
+        solver = new GFPSafetySolver(arena, manager);
     }
 
     BDD winning_region = solver->solve();
@@ -85,7 +81,6 @@ int main(int argc, char const *argv[])
         {
             aiger *strategy = solver->synthesize(winning_region);
             aiger *combined = Utils::Aiger::merge_arena_strategy(
-                                // cosafety ? aig_inverted_arena: aig_arena, 
                                 aig_arena,
                                 strategy
                             );
@@ -121,7 +116,6 @@ int main(int argc, char const *argv[])
 
     delete aig_arena;
     delete solver;
-    if(aig_inverted_arena != nullptr) delete aig_inverted_arena;
 
     return 0;
 }

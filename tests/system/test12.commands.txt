@@ -1,1 +1,0 @@
-read_model -i ./tests/system/controllers/test12.smv; go; check_ltlspec -p "G(formula)"; quit;

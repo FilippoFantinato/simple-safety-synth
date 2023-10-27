@@ -136,7 +136,6 @@ namespace Utils::Aiger
             aiger_add_latch(aig, latch->lit, latch->next, latch->name);
         }
 
-        // outputs TODO: fix names for multiple outputs
         AigerLit formula = aiger_not(arena->outputs->lit);
         for(unsigned i = 1; i < arena->num_outputs; ++i)
         {
@@ -144,11 +143,6 @@ namespace Utils::Aiger
             formula = create_and(aig, formula, aiger_not(output->lit));
         }
         aiger_add_output(aig, formula, OUTPUT_FORMULA);
-        // for(unsigned i = 0; i < arena->num_outputs; ++i)
-        // {
-        //     aiger_symbol *output = arena->outputs + i;
-        //     aiger_add_output(aig, aiger_not(output->lit), OUTPUT_FORMULA);
-        // }
 
         for(unsigned i = 0; i < arena->num_ands; ++i)
         {
