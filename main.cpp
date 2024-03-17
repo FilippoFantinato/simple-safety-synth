@@ -4,10 +4,10 @@
 #include <argparse/argparse.hpp>
 #include <cuddObj.hh>
 
-#include "./safety-arena/SafetyArena.h"
-#include "./safety-solver/SimpleSafetySolver.h"
-#include "./safety-solver/GFPSafetySolver.h"
-#include "./safety-solver/SimpleCoSafetySolver.h"
+#include "./src/safety-arena/SafetyArena.h"
+#include "./src/safety-solver/SimpleSafetySolver.h"
+#include "./src/safety-solver/GFPSafetySolver.h"
+#include "./src/safety-solver/SimpleCoSafetySolver.h"
 
 using argparse::ArgumentParser;
 namespace fs = std::filesystem;

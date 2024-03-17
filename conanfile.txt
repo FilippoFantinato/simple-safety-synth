@@ -1,5 +1,5 @@
 [requires]
-argparse/2.9
+argparse/3.0
 [generators]
 CMakeDeps
 CMakeToolchain
