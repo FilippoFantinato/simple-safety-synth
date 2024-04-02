@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(simple-safety-synth)
+project(simple-synth)
 
 # set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -15,7 +15,7 @@ find_program(BASH_EXECUTABLE NAMES bash REQUIRED)
 
 set(AIGER_LIBS ${CMAKE_SOURCE_DIR}/src/aiger/libaiger.a)
 
-add_executable(simple-safety-synth
+add_executable(simple-synth
     main.cpp
     src/safety-arena/SafetyArena.h
     src/safety-arena/SafetyArena.cpp
@@ -34,13 +34,13 @@ add_executable(simple-safety-synth
     src/utils/aiger2smv.cpp
 )
 
-target_link_libraries(simple-safety-synth PRIVATE
+target_link_libraries(simple-synth PRIVATE
     cudd
     ${AIGER_LIBS}
     argparse::argparse
 )
 
-target_include_directories(simple-safety-synth PUBLIC 
+target_include_directories(simple-synth PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/aiger
 )
 

@@ -15,6 +15,8 @@ private:
 
     std::vector<BDD> get_strategies(const BDD& winning_region) override;
 
+    BDD get_wining_region();
+
 public:
     SimpleCoSafetySolver(const SafetyArena& arena, const Cudd& manager);
 

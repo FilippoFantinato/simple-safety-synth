@@ -32,31 +32,6 @@ BDD SimpleSafetySolver::solve()
             arena;
 }
 
-// BDD SimpleSafetySolver::solve()
-// {
-//     BDD fixpoint    = _manager.bddZero();
-//     BDD safe_states = _manager.bddOne();
-//     const BDD& initial = _arena.initial();
-
-//     unsigned round = 0;
-//     while(fixpoint != safe_states)
-//     {
-//         std::cout << "Round: " << ++round << std::endl;
-
-//         fixpoint = safe_states;
-//         safe_states &= (safe_states.VectorCompose(_arena.compose()) & _arena.safety_condition())
-//                         .UnivAbstract(_uncontrollable_cube)
-//                         .ExistAbstract(_controllable_cube);
-        
-//         if(!(initial <= safe_states))
-//         {
-//             return _manager.bddZero();
-//         }
-//     }
-
-//     return fixpoint;
-// }
-
 aiger* SimpleSafetySolver::synthesize(const BDD& winning_region)
 {
     std::vector<BDD> strategies = get_strategies(winning_region);

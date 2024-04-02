@@ -4,6 +4,7 @@
 #include <argparse/argparse.hpp>
 #include <cuddObj.hh>
 
+#include "./src/aiger/aiger.h"
 #include "./src/safety-arena/SafetyArena.h"
 #include "./src/safety-solver/SimpleSafetySolver.h"
 #include "./src/safety-solver/GFPSafetySolver.h"
@@ -14,7 +15,7 @@ namespace fs = std::filesystem;
 
 int main(int argc, char const *argv[])
 {
-    ArgumentParser args("simple-safety-synth");
+    ArgumentParser args("simple-synth");
     args.add_argument("input")
            .help("Input file in either aag or aig format")
            .required()
@@ -99,7 +100,7 @@ int main(int argc, char const *argv[])
                 outfile->flush();
             }
             else
-            {   
+            {
                 FILE *outfile = output ? fopen(output->c_str(), "w") : stdout;
                 aiger_write_to_file(combined, aiger_ascii_mode, outfile);
                 fclose(outfile);
