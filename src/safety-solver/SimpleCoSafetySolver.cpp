@@ -12,18 +12,19 @@ BDD SimpleCoSafetySolver::solve()
     auto fixpoint  = _manager.bddZero();
     auto attractor = ~_arena.safety_condition();
     
-    unsigned round = 0;
     while(fixpoint != attractor)
     {
         fixpoint = attractor;
 
-        _attractors.insert(_attractors.begin(),
-            attractor.IsOne() ? initial : attractor
-        );
+        // _attractors.insert(_attractors.begin(),
+        //     attractor.IsOne() ? initial : attractor
+        // );
+        _attractors.insert(_attractors.begin(), attractor);
+        // _attractors.push_back(attractor.IsOne() ? initial : attractor);
 
         BDD cpre = attractor.VectorCompose(compose)
-                            .UnivAbstract(_uncontrollable_cube)
-                            .ExistAbstract(_controllable_cube);
+                            .ExistAbstract(_controllable_cube)
+                            .UnivAbstract(_uncontrollable_cube);
         
         attractor = attractor | cpre;
     }
@@ -41,14 +42,15 @@ BDD SimpleCoSafetySolver::solve()
 BDD SimpleCoSafetySolver::get_wining_region()
 {
     const auto& compose = _arena.compose();
-    auto winning_region = _manager.bddZero();
+    auto winning_region = _manager.bddOne();
 
-    for(int i = 1; i < _attractors.size(); ++i)
+    for(int i = _attractors.size() - 1; i > 0; --i)
     {
-        const BDD& pre_attractor = _attractors[i-1];
         const BDD& attractor = _attractors[i];
+        const BDD& pre_attractor = _attractors[i-1];
 
-        winning_region = winning_region | attractor.VectorCompose(compose);
+        // winning_region = winning_region | (~(pre_attractor & ~attractor) | attractor.VectorCompose(compose));
+        winning_region = winning_region & (~(pre_attractor & ~attractor) | attractor.VectorCompose(compose));
     }
 
     return winning_region;
@@ -96,16 +98,11 @@ aiger* SimpleCoSafetySolver::synthesize(const BDD& winning_region)
 //         controllable_strategy[c.NodeReadIndex()] = _manager.bddOne();
 //     }
 
-//     for(unsigned i = 0; i < (_attractors.size() - 1); ++i)
+//     for(unsigned i = _attractors.size() - 1; i > 0; --i)
 //     {
-//         std::cout << "Round: " << i << std::endl;
-        
-//         BDD attractor = _attractors[i];
-//         BDD next_attractor =  _attractors[i + 1];
+//         const BDD& attractor = _attractors[i];
+//         const BDD& pre_attractor =  _attractors[i - 1];
 //         BDD arena = attractor.VectorCompose(compose);
-//         // std::cout << "ATTRACTOR: " << attractor << std::endl;
-//         // std::cout << "ARENA: " << arena  << std::endl;
-//         // std::cout << ((attractor & initial) == initial) << std::endl;
 
 //         for(const BDD& c : controllables)
 //         {
@@ -126,14 +123,12 @@ aiger* SimpleCoSafetySolver::synthesize(const BDD& winning_region)
 //             BDD care_set      = must_be_true | must_be_false;
 //             BDD model = maybe_true.Restrict(care_set);
 
-//             BDD rule = (~(attractor & !next_attractor)) | model;
+//             BDD rule = (!(pre_attractor & !attractor)) | model;
 
 //             controllable_strategy[c.NodeReadIndex()] &= rule;
 
 //             arena &= c.Xnor(model);
 //         }
-
-//         std::cout << std::endl;
 //     }
 
 //     std::vector<BDD> strategies;
@@ -144,7 +139,6 @@ aiger* SimpleCoSafetySolver::synthesize(const BDD& winning_region)
 
 //     return strategies;
 // }
-
 
 std::vector<BDD> SimpleCoSafetySolver::get_strategies(const BDD& winning_region)
 {

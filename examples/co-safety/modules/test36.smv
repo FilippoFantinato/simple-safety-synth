@@ -1,0 +1,9 @@
+MODULE main
+IVAR
+	c : boolean;
+	u : boolean;
+LTLSPEC !((X(u) | X(c)) & (X(u) <-> X(c)))
+
+--INPUT : u
+--OUTPUT : c
+--UNREALIZABLE

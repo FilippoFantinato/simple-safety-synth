@@ -1,0 +1,10 @@
+MODULE main
+IVAR
+	c1 : boolean;
+	c2 : boolean;
+	c3 : boolean;
+	c4 : boolean;
+LTLSPEC !(c1 | c2 | c3 | c4)
+
+--OUTPUT : c1,c2,c3,c4
+--REALIZABLE

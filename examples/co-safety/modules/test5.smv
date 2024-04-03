@@ -1,0 +1,7 @@
+MODULE main
+IVAR
+	u : boolean;
+LTLSPEC !F(u)
+
+--INPUT  : u
+--UNREALIZABLE

@@ -1,0 +1,37 @@
+MODULE main
+IVAR
+	c1 : boolean;
+	c2 : boolean;
+	c3 : boolean;
+	c4 : boolean;
+	c5 : boolean;
+	c6 : boolean;
+	c7 : boolean;
+	c8 : boolean;
+	c9 : boolean;
+	c10 : boolean;
+	c11 : boolean;
+	c12 : boolean;
+	c13 : boolean;
+	c14 : boolean;
+	c15 : boolean;
+	u : boolean;
+LTLSPEC !(F(c1) & 
+X F(c2) &
+X X F(c3) & 
+X X X F(c4) & 
+X X X X F(c5) & 
+X X X X X F(c6) &
+X X X X X X F(c7) & 
+X X X X X X X F(c8) & 
+X X X X X X X X F(c9) & 
+X X X X X X X X X F(c10) & 
+X X X X X X X X X X F(c11) & 
+X X X X X X X X X X X F(c12) & 
+X X X X X X X X X X X X F(c13) & 
+X X X X X X X X X X X X X F(c14) & 
+X X X X X X X X X X X X X X F(c15 | u))
+
+--INPUT : u
+--OUTPUT : c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15
+--REALIZABLE

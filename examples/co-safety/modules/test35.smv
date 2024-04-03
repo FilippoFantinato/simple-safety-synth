@@ -1,0 +1,11 @@
+MODULE main
+IVAR
+	c1 : boolean;
+	c2 : boolean;
+	u1 : boolean;
+	u2 : boolean;
+LTLSPEC !((F(c1) & F(c2)) | (F(u1) & F(u2)))
+
+--INPUT : u1,u2
+--OUTPUT : c1,c2
+--REALIZABLE

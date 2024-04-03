@@ -1,0 +1,9 @@
+MODULE main
+IVAR
+	q : boolean;
+	p : boolean;
+LTLSPEC !((X X p) U (q))
+
+--INPUT : p
+--OUTPUT : q
+--REALIZABLE

@@ -1,0 +1,10 @@
+MODULE main
+IVAR
+	c : boolean;
+	u1 : boolean;
+	u2 : boolean;
+LTLSPEC !(X X (c U (u1 | u2)))
+
+--INPUT   : u1,u2
+--OUTPUT  : c
+--UNREALIZABLE

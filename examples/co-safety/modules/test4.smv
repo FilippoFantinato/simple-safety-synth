@@ -1,0 +1,7 @@
+MODULE main
+IVAR
+	c : boolean;
+LTLSPEC !F(c)
+
+--OUTPUT  : c
+--REALIZABLE

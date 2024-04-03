@@ -1,0 +1,23 @@
+MODULE main
+IVAR
+	c : boolean;
+	u : boolean;
+LTLSPEC !(F(c) & 
+X F(!c) &
+X X F(c) & 
+X X X F(!c) & 
+X X X X F(c) & 
+X X X X X F(!c) &
+X X X X X X F(c) & 
+X X X X X X X F(!c) & 
+X X X X X X X X F(!c) & 
+X X X X X X X X X F(!c) & 
+X X X X X X X X X X F(c) & 
+X X X X X X X X X X X F(c) & 
+X X X X X X X X X X X X F(!c) & 
+X X X X X X X X X X X X X F(c) & 
+X X X X X X X X X X X X X X F(!c | u))
+
+--INPUT : u
+--OUTPUT : c
+--REALIZABLE
