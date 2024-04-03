@@ -6,9 +6,10 @@
 
 #include "./src/aiger/aiger.h"
 #include "./src/safety-arena/SafetyArena.h"
-#include "./src/safety-solver/SimpleSafetySolver.h"
-#include "./src/safety-solver/GFPSafetySolver.h"
-#include "./src/safety-solver/SimpleCoSafetySolver.h"
+#include "./src/solvers/SimpleSafetySolver.h"
+#include "./src/solvers/GFPSafetySolver.h"
+#include "./src/solvers/SimpleCoSafetySolver.h"
+#include "./src/solvers/SimpleCoSafetySolver2.h"
 
 using argparse::ArgumentParser;
 namespace fs = std::filesystem;

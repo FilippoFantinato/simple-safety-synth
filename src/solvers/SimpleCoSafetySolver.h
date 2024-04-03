@@ -11,11 +11,8 @@
 class SimpleCoSafetySolver : public GameSolver
 {
 private:
-    std::vector<BDD> _attractors;
-
     std::vector<BDD> get_strategies(const BDD& winning_region) override;
-
-    BDD get_wining_region();
+    BDD get_wining_region(const std::vector<BDD>& attractors);
 
 public:
     SimpleCoSafetySolver(const SafetyArena& arena, const Cudd& manager);

@@ -19,16 +19,18 @@ add_executable(simple-synth
     main.cpp
     src/safety-arena/SafetyArena.h
     src/safety-arena/SafetyArena.cpp
-    src/safety-solver/BDD2Aiger.h
-    src/safety-solver/BDD2Aiger.cpp
-    src/safety-solver/GameSolver.h
-    src/safety-solver/GameSolver.cpp
-    src/safety-solver/SimpleSafetySolver.h
-    src/safety-solver/SimpleSafetySolver.cpp
-    src/safety-solver/GFPSafetySolver.h
-    src/safety-solver/GFPSafetySolver.cpp
-    src/safety-solver/SimpleCoSafetySolver.h
-    src/safety-solver/SimpleCoSafetySolver.cpp
+    src/solvers/BDD2Aiger.h
+    src/solvers/BDD2Aiger.cpp
+    src/solvers/GameSolver.h
+    src/solvers/GameSolver.cpp
+    src/solvers/SimpleSafetySolver.h
+    src/solvers/SimpleSafetySolver.cpp
+    src/solvers/GFPSafetySolver.h
+    src/solvers/GFPSafetySolver.cpp
+    src/solvers/SimpleCoSafetySolver.h
+    src/solvers/SimpleCoSafetySolver.cpp
+    src/solvers/SimpleCoSafetySolver2.h
+    src/solvers/SimpleCoSafetySolver2.cpp
     src/utils/aiger.h
     src/utils/aiger.cpp
     src/utils/aiger2smv.cpp

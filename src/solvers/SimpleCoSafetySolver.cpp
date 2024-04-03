@@ -12,15 +12,13 @@ BDD SimpleCoSafetySolver::solve()
     auto fixpoint  = _manager.bddZero();
     auto attractor = ~_arena.safety_condition();
     
+    std::vector<BDD> attractors;
+
     while(fixpoint != attractor)
     {
         fixpoint = attractor;
 
-        // _attractors.insert(_attractors.begin(),
-        //     attractor.IsOne() ? initial : attractor
-        // );
-        _attractors.insert(_attractors.begin(), attractor);
-        // _attractors.push_back(attractor.IsOne() ? initial : attractor);
+        attractors.insert(attractors.begin(), attractor);
 
         BDD cpre = attractor.VectorCompose(compose)
                             .ExistAbstract(_controllable_cube)
@@ -29,27 +27,23 @@ BDD SimpleCoSafetySolver::solve()
         attractor = attractor | cpre;
     }
 
-    BDD arena = attractor;
+    const BDD& arena = attractor;
 
-    // return (initial & arena) != initial ? 
-    //         _manager.bddZero() :
-    //         arena;
     return (initial & arena) != initial ? 
             _manager.bddZero() :
-            get_wining_region();
+            get_wining_region(attractors);
 }
 
-BDD SimpleCoSafetySolver::get_wining_region()
+BDD SimpleCoSafetySolver::get_wining_region(const std::vector<BDD>& attractors)
 {
     const auto& compose = _arena.compose();
     auto winning_region = _manager.bddOne();
 
-    for(int i = _attractors.size() - 1; i > 0; --i)
+    for(int i = attractors.size() - 1; i > 0; --i)
     {
-        const BDD& attractor = _attractors[i];
-        const BDD& pre_attractor = _attractors[i-1];
+        const BDD& attractor = attractors[i];
+        const BDD& pre_attractor = attractors[i-1];
 
-        // winning_region = winning_region | (~(pre_attractor & ~attractor) | attractor.VectorCompose(compose));
         winning_region = winning_region & (~(pre_attractor & ~attractor) | attractor.VectorCompose(compose));
     }
 
@@ -85,60 +79,6 @@ aiger* SimpleCoSafetySolver::synthesize(const BDD& winning_region)
 
     return encoder.get_encoding();
 }
-
-// std::vector<BDD> SimpleCoSafetySolver::get_strategies(const BDD& winning_region)
-// {
-//     const BDD& initial  = _arena.initial();
-//     const auto& compose = _arena.compose();
-//     const auto& controllables = _arena.controllables();
-
-//     std::map<int, BDD> controllable_strategy;
-//     for(const BDD& c : controllables)
-//     {
-//         controllable_strategy[c.NodeReadIndex()] = _manager.bddOne();
-//     }
-
-//     for(unsigned i = _attractors.size() - 1; i > 0; --i)
-//     {
-//         const BDD& attractor = _attractors[i];
-//         const BDD& pre_attractor =  _attractors[i - 1];
-//         BDD arena = attractor.VectorCompose(compose);
-
-//         for(const BDD& c : controllables)
-//         {
-//             BDD other_controllables = std::accumulate(
-//                         controllables.begin(),
-//                         controllables.end(),
-//                         _manager.bddOne(),
-//                         [&c](const BDD& acc, const BDD& el){
-//                             return c != el ? acc&el : acc;
-//                         }
-//                     );
-//             BDD winning_controllables = arena.ExistAbstract(other_controllables);
-
-//             BDD maybe_true  = winning_controllables.Cofactor(c);
-//             BDD maybe_false = winning_controllables.Cofactor(~c);
-//             BDD must_be_true  = (~maybe_false) & maybe_true;
-//             BDD must_be_false = (~maybe_true) & maybe_false;
-//             BDD care_set      = must_be_true | must_be_false;
-//             BDD model = maybe_true.Restrict(care_set);
-
-//             BDD rule = (!(pre_attractor & !attractor)) | model;
-
-//             controllable_strategy[c.NodeReadIndex()] &= rule;
-
-//             arena &= c.Xnor(model);
-//         }
-//     }
-
-//     std::vector<BDD> strategies;
-//     for(auto& p : controllable_strategy)
-//     {
-//         strategies.push_back(p.second);
-//     }
-
-//     return strategies;
-// }
 
 std::vector<BDD> SimpleCoSafetySolver::get_strategies(const BDD& winning_region)
 {
