@@ -50,5 +50,6 @@ enable_testing()
 
 add_test(
     NAME SystemTests
-    COMMAND bash ../tests/system/run-system-test.sh
+    COMMAND bash ../tests/system/safety-system-test.sh
+    COMMAND bash ../tests/system/co-safety-system-test.sh
 )

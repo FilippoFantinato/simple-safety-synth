@@ -130,3 +130,5 @@ environment_run.sh.env
 /tests/system/safety-controllers
 /tests/system/co-safety-controllers
 /include
+
+!/src/aiger/Makefile
