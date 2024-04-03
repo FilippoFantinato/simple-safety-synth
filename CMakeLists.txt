@@ -49,7 +49,11 @@ target_include_directories(simple-synth PUBLIC
 enable_testing()
 
 add_test(
-    NAME SystemTests
+    NAME SafetySystemTest
     COMMAND bash ../tests/system/safety-system-test.sh
+)
+
+add_test(
+    NAME CoSafetySystemTest
     COMMAND bash ../tests/system/co-safety-system-test.sh
 )
